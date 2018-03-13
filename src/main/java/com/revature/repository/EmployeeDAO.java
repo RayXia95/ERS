@@ -8,12 +8,24 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.revature.model.Employee;
+import com.revature.model.EmployeeRole;
 import com.revature.model.EmployeeToken;
 import com.revature.util.ErsRepositoryUtil;
 
 public class EmployeeDAO implements EmployeeRepository
 {
     private static final Logger logger = Logger.getLogger(EmployeeDAO.class);
+
+    private static EmployeeDAO employeeDAO = new EmployeeDAO();
+
+    private EmployeeDAO()
+    {
+    }
+
+    public EmployeeDAO getEmployeeDAO()
+    {
+	return employeeDAO;
+    }
 
     @Override
     public boolean insert(Employee employee)
@@ -53,7 +65,43 @@ public class EmployeeDAO implements EmployeeRepository
     @Override
     public boolean update(Employee employee)
     {
-	// TODO Auto-generated method stub
+	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
+	{
+	    /**
+	    *	U_ID
+	    	U_FIRSTNAME
+	    	U_LASTNAME
+	    	U_USERNAME
+	    	U_PASSWORD
+	    	U_EMAIL
+	    	UR_ID 
+	    */
+	    final String SQL = "UPDATE USER_T SET U_FIRSTNAME = ?, U_LASTNAME = ?, U_USERNAME = ? , U_PASSWORD = ?, U_EMAIL = ?, UR_ID = ? WHERE U_ID =  ?";
+	    PreparedStatement statement = connection.prepareStatement(SQL);
+	    int parameterIndex = 0;
+
+	    statement.setString(++parameterIndex, employee.getFirstName());
+	    statement.setString(++parameterIndex, employee.getLastName());
+	    statement.setString(++parameterIndex, employee.getUsername());
+	    statement.setString(++parameterIndex, employee.getPassword());
+	    statement.setString(++parameterIndex, employee.getEmail());
+	    statement.setInt(++parameterIndex, employee.getEmployeeRole().getId());
+	    statement.setInt(++parameterIndex, employee.getId());
+
+	    if ( statement.executeUpdate() != 0 )
+	    {
+		logger.trace("Was able to update employee");
+		return true;
+	    }
+	    else
+	    {
+		return false;
+	    }
+	}
+	catch (SQLException e)
+	{
+	    logger.error("Was unable to update given employee", e);
+	}
 	return false;
     }
 
@@ -108,6 +156,8 @@ public class EmployeeDAO implements EmployeeRepository
 
     public static void main(String[] args)
     {
+	new EmployeeDAO().getEmployeeDAO().update(new Employee(21, "RAYMOND", "XIA", "RayXia95", "hello",
+		"raymondxia95@gmail.com", new EmployeeRole(1, "EMPLOYEE")));
     }
 
 }
