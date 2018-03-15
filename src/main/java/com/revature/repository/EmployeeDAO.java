@@ -100,24 +100,6 @@ public class EmployeeDAO implements EmployeeRepository
     @Override
     public Employee select(int employeeId)
     {
-	/**
-	    *	U_ID
-	    	U_FIRSTNAME
-	    	U_LASTNAME
-	    	U_USERNAME
-	    	U_PASSWORD
-	    	U_EMAIL
-	    	UR_ID 
-	    	NEED JOIN FOR THE EMPLOYEE ROLE
-	    	
-	SELECT U.U_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE
-	FROM
-	USER_T U
-	INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID;
-	this command works!
-	
-	    */
-
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
 	    final String SQL = "SELECT U.U_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE FROM USER_T U INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID WHERE U.U_ID = ?";
@@ -137,20 +119,8 @@ public class EmployeeDAO implements EmployeeRepository
 		employee.setUsername(resultSet.getString("U_USERNAME"));
 		employee.setPassword(resultSet.getString("U_PASSWORD"));
 		employee.setEmail(resultSet.getString("U_EMAIL"));
+		employee.setEmployeeRole(new EmployeeRole(resultSet.getInt("UR_ID"), resultSet.getString("UR_TYPE")));
 
-		EmployeeRole employeeRole = new EmployeeRole();
-		employeeRole.setId(resultSet.getInt("UR_ID"));
-
-		if ( employeeRole.getId() == 1 )
-		{
-		    //employeeRole.setType(EmployeeRole.EMPLOYEE);
-		    employee.setEmployeeRole(employeeRole);
-		}
-		else if ( employeeRole.getId() == 2 )
-		{
-		    //employeeRole.setType(EmployeeRole.MANAGER);
-		    employee.setEmployeeRole(employeeRole);
-		}
 		return employee;
 	    }
 	}
@@ -164,7 +134,6 @@ public class EmployeeDAO implements EmployeeRepository
     @Override
     public Employee select(String username)
     {
-	// NEED JOIN FOR THE EMPLOYEE ROLE
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
 	    final String SQL = "SELECT U.U_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE FROM USER_T U INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID WHERE U.U_USERNAME = ?";
@@ -184,20 +153,8 @@ public class EmployeeDAO implements EmployeeRepository
 		employee.setUsername(resultSet.getString("U_USERNAME"));
 		employee.setPassword(resultSet.getString("U_PASSWORD"));
 		employee.setEmail(resultSet.getString("U_EMAIL"));
+		employee.setEmployeeRole(new EmployeeRole(resultSet.getInt("UR_ID"), resultSet.getString("UR_TYPE")));
 
-		EmployeeRole employeeRole = new EmployeeRole();
-		employeeRole.setId(resultSet.getInt("UR_ID"));
-
-		if ( employeeRole.getId() == 1 )
-		{
-		    //employeeRole.setType(EmployeeRole.EMPLOYEE);
-		    employee.setEmployeeRole(employeeRole);
-		}
-		else if ( employeeRole.getId() == 2 )
-		{
-		    //employeeRole.setType(EmployeeRole.MANAGER);
-		    employee.setEmployeeRole(employeeRole);
-		}
 		return employee;
 	    }
 	}
@@ -211,8 +168,8 @@ public class EmployeeDAO implements EmployeeRepository
     @Override
     public Set<Employee> selectAll()
     {
-	//NEED JOIN FOR THE EMPLOYEE ROLE
 	Set<Employee> employees = new HashSet<>();
+
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
 	    final String SQL = "SELECT U.U_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE FROM USER_T U INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID";
@@ -230,20 +187,7 @@ public class EmployeeDAO implements EmployeeRepository
 		employee.setUsername(resultSet.getString("U_USERNAME"));
 		employee.setPassword(resultSet.getString("U_PASSWORD"));
 		employee.setEmail(resultSet.getString("U_EMAIL"));
-
-		EmployeeRole employeeRole = new EmployeeRole();
-		employeeRole.setId(resultSet.getInt("UR_ID"));
-
-		if ( employeeRole.getId() == 1 )
-		{
-		    //employeeRole.setType(EmployeeRole.EMPLOYEE);
-		    employee.setEmployeeRole(employeeRole);
-		}
-		else if ( employeeRole.getId() == 2 )
-		{
-		    //employeeRole.setType(EmployeeRole.MANAGER);
-		    employee.setEmployeeRole(employeeRole);
-		}
+		employee.setEmployeeRole(new EmployeeRole(resultSet.getInt("UR_ID"), resultSet.getString("UR_TYPE")));
 
 		employees.add(employee);
 	    }
@@ -258,8 +202,27 @@ public class EmployeeDAO implements EmployeeRepository
     @Override
     public String getPasswordHash(Employee employee)
     {
-	// TODO Auto-generated method stub
-	return null;
+	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
+	{
+	    final String SQL = "SELECT GET_HASH(?,?) AS HASH FROM DUAL";
+	    PreparedStatement statement = connection.prepareStatement(SQL);
+	    int parameterIndex = 0;
+
+	    statement.setString(++parameterIndex, employee.getUsername());
+	    statement.setString(++parameterIndex, employee.getPassword());
+
+	    ResultSet result = statement.executeQuery();
+
+	    if ( result.next() )
+	    {
+		return result.getString("HASH");
+	    }
+	}
+	catch (SQLException e)
+	{
+	    logger.warn("Exception getting customer hash", e);
+	}
+	return new String();
     }
 
     @Override
