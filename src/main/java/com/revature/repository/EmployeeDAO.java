@@ -120,7 +120,7 @@ public class EmployeeDAO implements EmployeeRepository
 
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
-	    final String SQL = "SELECT * FROM USER_T WHERE U_ID = ?";
+	    final String SQL = "SELECT U.U_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE FROM USER_T U INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID WHERE U.U_ID = ?";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 
 	    statement.setInt(1, employeeId);
@@ -167,7 +167,7 @@ public class EmployeeDAO implements EmployeeRepository
 	// NEED JOIN FOR THE EMPLOYEE ROLE
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
-	    final String SQL = "SELECT * FROM USER_T WHERE U_USERNAME = ?";
+	    final String SQL = "SELECT U.U_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE FROM USER_T U INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID WHERE U.U_USERNAME = ?";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 
 	    statement.setString(1, username);
@@ -215,7 +215,7 @@ public class EmployeeDAO implements EmployeeRepository
 	Set<Employee> employees = new HashSet<>();
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
-	    final String SQL = "SELECT * FROM USER_T";
+	    final String SQL = "SELECT U.U_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE FROM USER_T U INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 
 	    ResultSet resultSet = statement.executeQuery();
