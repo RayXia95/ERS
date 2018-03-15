@@ -2,6 +2,7 @@ package com.revature.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 
@@ -108,7 +109,55 @@ public class EmployeeDAO implements EmployeeRepository
     @Override
     public Employee select(int employeeId)
     {
-	// TODO Auto-generated method stub
+	/**
+	    *	U_ID
+	    	U_FIRSTNAME
+	    	U_LASTNAME
+	    	U_USERNAME
+	    	U_PASSWORD
+	    	U_EMAIL
+	    	UR_ID 
+	    */
+
+	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
+	{
+	    final String SQL = "SELECT * FROM USER_T WHERE U_ID = ?";
+	    PreparedStatement statement = connection.prepareStatement(SQL);
+
+	    statement.setInt(1, employeeId);
+
+	    ResultSet resultSet = statement.executeQuery();
+
+	    while (resultSet.next())
+	    {
+		Employee employee = new Employee();
+
+		employee.setId(resultSet.getInt("U_ID"));
+		employee.setFirstName(resultSet.getString("U_FIRSTNAME"));
+		employee.setLastName(resultSet.getString("U_LASTNAME"));
+		employee.setUsername(resultSet.getString("U_USERNAME"));
+		employee.setPassword(resultSet.getString("U_PASSWORD"));
+		employee.setEmail(resultSet.getString("U_EMAIL"));
+
+		EmployeeRole employeeRole = new EmployeeRole();
+		employeeRole.setId(resultSet.getInt("UR_ID"));
+		if ( employeeRole.getId() == 1 )
+		{
+		    employeeRole.setType(EmployeeRole.EMPLOYEE);
+		    employee.setEmployeeRole(employeeRole);
+		}
+		else if ( employeeRole.getId() == 2 )
+		{
+		    employeeRole.setType(EmployeeRole.MANAGER);
+		    employee.setEmployeeRole(employeeRole);
+		}
+		return employee;
+	    }
+	}
+	catch (SQLException e)
+	{
+	    logger.error("Could not get specific employee", e);
+	}
 	return null;
     }
 
