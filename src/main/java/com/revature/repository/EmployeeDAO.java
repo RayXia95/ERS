@@ -77,13 +77,12 @@ public class EmployeeDAO implements EmployeeRepository
 	    	U_EMAIL
 	    	UR_ID 
 	    */
-	    final String SQL = "UPDATE USER_T SET U_FIRSTNAME = ?, U_LASTNAME = ?, U_USERNAME = ? , U_PASSWORD = ?, U_EMAIL = ?, UR_ID = ? WHERE U_ID =  ?";
+	    final String SQL = "UPDATE USER_T SET U_FIRSTNAME = ?, U_LASTNAME = ? , U_PASSWORD = ?, U_EMAIL = ?, UR_ID = ? WHERE U_ID =  ?";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
 	    statement.setString(++parameterIndex, employee.getFirstName());
 	    statement.setString(++parameterIndex, employee.getLastName());
-	    statement.setString(++parameterIndex, employee.getUsername());
 	    statement.setString(++parameterIndex, employee.getPassword());
 	    statement.setString(++parameterIndex, employee.getEmail());
 	    statement.setInt(++parameterIndex, employee.getEmployeeRole().getId());
