@@ -109,6 +109,13 @@ public class EmployeeDAO implements EmployeeRepository
 	    	U_EMAIL
 	    	UR_ID 
 	    	NEED JOIN FOR THE EMPLOYEE ROLE
+	    	
+	SELECT U.U_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE
+	FROM
+	USER_T U
+	INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID;
+	this command works!
+	
 	    */
 
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
