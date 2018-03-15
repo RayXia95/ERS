@@ -15,9 +15,6 @@ public class EmployeeRole implements Serializable
      */
     private static final long serialVersionUID = -8261405093505107417L;
 
-    public static final String MANAGER = "MANAGER";
-    public static final String EMPLOYEE = "EMPLOYEE";
-
     /**
      * PRIMARY KEY
      */
