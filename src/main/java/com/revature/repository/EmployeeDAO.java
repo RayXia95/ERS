@@ -24,7 +24,7 @@ public class EmployeeDAO implements EmployeeRepository
     {
     }
 
-    public EmployeeDAO getEmployeeDAO()
+    public static EmployeeDAO getEmployeeDAO()
     {
 	return employeeDAO;
     }
@@ -39,11 +39,11 @@ public class EmployeeDAO implements EmployeeRepository
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
-	    statement.setString(++parameterIndex, employee.getFirstName());
-	    statement.setString(++parameterIndex, employee.getLastName());
-	    statement.setString(++parameterIndex, employee.getUsername());
+	    statement.setString(++parameterIndex, employee.getFirstName().toUpperCase());
+	    statement.setString(++parameterIndex, employee.getLastName().toUpperCase());
+	    statement.setString(++parameterIndex, employee.getUsername().toLowerCase());
 	    statement.setString(++parameterIndex, employee.getPassword());
-	    statement.setString(++parameterIndex, employee.getEmail());
+	    statement.setString(++parameterIndex, employee.getEmail().toLowerCase());
 	    statement.setInt(++parameterIndex, employee.getEmployeeRole().getId());
 
 	    if ( statement.executeUpdate() != 0 )
@@ -73,10 +73,10 @@ public class EmployeeDAO implements EmployeeRepository
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
-	    statement.setString(++parameterIndex, employee.getFirstName());
-	    statement.setString(++parameterIndex, employee.getLastName());
+	    statement.setString(++parameterIndex, employee.getFirstName().toUpperCase());
+	    statement.setString(++parameterIndex, employee.getLastName().toUpperCase());
 	    statement.setString(++parameterIndex, employee.getPassword());
-	    statement.setString(++parameterIndex, employee.getEmail());
+	    statement.setString(++parameterIndex, employee.getEmail().toLowerCase());
 	    statement.setInt(++parameterIndex, employee.getEmployeeRole().getId());
 	    statement.setInt(++parameterIndex, employee.getId());
 
@@ -128,7 +128,7 @@ public class EmployeeDAO implements EmployeeRepository
 	{
 	    logger.error("Could not get specific employee", e);
 	}
-	return null;
+	return new Employee();
     }
 
     @Override
@@ -162,7 +162,7 @@ public class EmployeeDAO implements EmployeeRepository
 	{
 	    logger.error("Could not get specific employee", e);
 	}
-	return null;
+	return new Employee();
     }
 
     @Override
@@ -204,11 +204,10 @@ public class EmployeeDAO implements EmployeeRepository
     {
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
-	    final String SQL = "SELECT GET_HASH(?,?) AS HASH FROM DUAL";
+	    final String SQL = "SELECT GET_HASH(?) AS HASH FROM DUAL";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
-	    statement.setString(++parameterIndex, employee.getUsername());
 	    statement.setString(++parameterIndex, employee.getPassword());
 
 	    ResultSet result = statement.executeQuery();
@@ -245,11 +244,4 @@ public class EmployeeDAO implements EmployeeRepository
 	// TODO Auto-generated method stub
 	return null;
     }
-
-    public static void main(String[] args)
-    {
-	new EmployeeDAO().getEmployeeDAO().update(new Employee(21, "RAYMOND", "XIA", "RayXia95", "hello",
-		"raymondxia95@gmail.com", new EmployeeRole(1, "EMPLOYEE")));
-    }
-
 }
