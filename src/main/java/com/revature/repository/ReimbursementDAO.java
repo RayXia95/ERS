@@ -3,6 +3,7 @@ package com.revature.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -24,17 +25,43 @@ public class ReimbursementDAO implements ReimbursementRepository
     {
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
+	    /**
+	     * Id int null
+	     * LOCALDATETIME Requested
+	     * LOCALDATETIME Resolved
+	     * amount double
+	     * String description
+	     * receipt object null
+	     * Employee requester
+	     * Employee approver
+	     * ReimbursementStatus status
+	     * ReimbursementType type
+	     * 
+	     * 	R_ID	NUMBER
+	    R_REQUESTED	TIMESTAMP(6)
+	    R_RESOLVED	TIMESTAMP(6)
+	    R_AMOUNT	NUMBER(8,2)
+	    R_DESCRIPTION	VARCHAR2(4000 BYTE)
+	    R_RECEIPT	BLOB
+	    EMPLOYEE_ID	NUMBER
+	    MANAGER_ID	NUMBER
+	    RS_ID	NUMBER
+	    RT_ID	NUMBER
+	     */
 	    logger.trace("Was able to get connection to insert");
-	    final String SQL = "INSERT INTO USER_T VALUES(NULL,?,?,?,?,?,?)";
+	    final String SQL = "INSERT INTO REIMBURSEMENT_T VALUES(NULL,?,?,?,?, NULL,?,?,?,?)";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
-	    statement.setString(++parameterIndex, employee.getFirstName().toUpperCase());
-	    statement.setString(++parameterIndex, employee.getLastName().toUpperCase());
-	    statement.setString(++parameterIndex, employee.getUsername().toLowerCase());
-	    statement.setString(++parameterIndex, employee.getPassword());
-	    statement.setString(++parameterIndex, employee.getEmail().toLowerCase());
-	    statement.setInt(++parameterIndex, employee.getEmployeeRole().getId());
+	    statement.setTimestamp(++parameterIndex, Timestamp.valueOf(reimbursement.getRequested()));
+	    statement.setTimestamp(++parameterIndex, Timestamp.valueOf(reimbursement.getResolved()));
+	    statement.setDouble(++parameterIndex, reimbursement.getAmount());
+	    statement.setString(++parameterIndex, reimbursement.getDescription());
+	    //statement.setBlob(++parameterIndex, (Blob) reimbursement.getRequester());
+	    statement.setInt(++parameterIndex, reimbursement.getRequester().getId());
+	    statement.setInt(++parameterIndex, reimbursement.getApprover().getId());
+	    statement.setInt(++parameterIndex, reimbursement.getStatus().getId()); // manager ID???
+	    statement.setInt(++parameterIndex, reimbursement.getType().getId());
 
 	    if ( statement.executeUpdate() != 0 )
 	    {
