@@ -37,16 +37,7 @@ public class ReimbursementDAO implements ReimbursementRepository
 	     * ReimbursementStatus status
 	     * ReimbursementType type
 	     * 
-	     * 	R_ID	NUMBER
-	    R_REQUESTED	TIMESTAMP(6)
-	    R_RESOLVED	TIMESTAMP(6)
-	    R_AMOUNT	NUMBER(8,2)
-	    R_DESCRIPTION	VARCHAR2(4000 BYTE)
-	    R_RECEIPT	BLOB
-	    EMPLOYEE_ID	NUMBER
-	    MANAGER_ID	NUMBER
-	    RS_ID	NUMBER
-	    RT_ID	NUMBER
+	     * 	
 	     */
 	    logger.trace("Was able to get connection to insert");
 	    final String SQL = "INSERT INTO REIMBURSEMENT_T VALUES(NULL,?,?,?,?, NULL,?,?,?,?)";
@@ -59,8 +50,8 @@ public class ReimbursementDAO implements ReimbursementRepository
 	    statement.setString(++parameterIndex, reimbursement.getDescription());
 	    //statement.setBlob(++parameterIndex, (Blob) reimbursement.getRequester());
 	    statement.setInt(++parameterIndex, reimbursement.getRequester().getId());
-	    statement.setInt(++parameterIndex, reimbursement.getApprover().getId());
-	    statement.setInt(++parameterIndex, reimbursement.getStatus().getId()); // manager ID???
+	    statement.setInt(++parameterIndex, reimbursement.getApprover().getId()); // manager ID???
+	    statement.setInt(++parameterIndex, reimbursement.getStatus().getId());
 	    statement.setInt(++parameterIndex, reimbursement.getType().getId());
 
 	    if ( statement.executeUpdate() != 0 )
@@ -84,7 +75,44 @@ public class ReimbursementDAO implements ReimbursementRepository
     @Override
     public boolean update(Reimbursement reimbursement)
     {
-	// TODO Auto-generated method stub
+	/**
+	 * R_ID	NUMBER
+	    R_REQUESTED	TIMESTAMP(6)
+	    R_RESOLVED	TIMESTAMP(6)	//
+	    R_AMOUNT	NUMBER(8,2)	//
+	    R_DESCRIPTION	VARCHAR2(4000 BYTE) //
+	    R_RECEIPT	BLOB
+	    EMPLOYEE_ID	NUMBER
+	    MANAGER_ID	NUMBER	//
+	    RS_ID	NUMBER	//
+	    RT_ID	NUMBER	//
+	 */
+	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
+	{
+	    final String SQL = "UPDATE REIMBURSEMENT SET R_RESOLVED = ?, R_AMOUNT = ?, R_DESCRIPTION = ?, MANAGER_ID = ?, RS_ID = ?, RT_ID = ?";
+	    PreparedStatement statement = connection.prepareStatement(SQL);
+	    int parameterIndex = 0;
+
+	    statement.setTimestamp(++parameterIndex, Timestamp.valueOf(reimbursement.getResolved()));
+	    statement.setDouble(++parameterIndex, reimbursement.getAmount());
+	    statement.setString(++parameterIndex, reimbursement.getDescription());
+	    statement.setInt(++parameterIndex, reimbursement.getApprover().getId());
+	    statement.setInt(++parameterIndex, reimbursement.getStatus().getId());
+	    statement.setInt(++parameterIndex, reimbursement.getType().getId());
+
+	    if ( statement.executeUpdate() != 0 )
+	    {
+		return true;
+	    }
+	    else
+	    {
+		return false;
+	    }
+	}
+	catch (SQLException e)
+	{
+	    logger.error("Was unable to update", e);
+	}
 	return false;
     }
 
