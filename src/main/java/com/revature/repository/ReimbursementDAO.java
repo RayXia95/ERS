@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -454,6 +455,21 @@ public class ReimbursementDAO implements ReimbursementRepository
 	    logger.error("Could not get reimbursementType", e);
 	}
 	return new HashSet<>();
+    }
+
+    public static void main(String[] args)
+    {
+	EmployeeRole employeeRole = new EmployeeRole(1, "EMPLOYEE");
+	EmployeeRole employeeRoleMan = new EmployeeRole(2, "MANAGER");
+
+	Employee employee = new Employee(21, "RAYMOND", "XIA", "RayXia95", "hello", "raymondxia95@gmail.com",
+		employeeRole);
+	Employee manager = new Employee(1, "PETER", "ALAGNA", "PALAGNAJR", "hello", "PETER.ALAGNA@REVATURE.COM",
+		employeeRoleMan);
+
+	Reimbursement reimbursement = new Reimbursement(0, LocalDateTime.now(), null, 1.5, "Dummy testing", employee,
+		manager, new ReimbursementStatus(1, "PENDING"), new ReimbursementType(1, "OTHERS"));
+	new ReimbursementDAO().insert(reimbursement);
     }
 
 }
