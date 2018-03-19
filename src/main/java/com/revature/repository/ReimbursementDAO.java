@@ -45,7 +45,7 @@ public class ReimbursementDAO implements ReimbursementRepository
 	     * 	
 	     */
 	    logger.trace("Was able to get connection to insert");
-	    final String SQL = "INSERT INTO REIMBURSEMENT_T VALUES(NULL,?,?,?,?, NULL,?,?,?,?)";
+	    final String SQL = "INSERT INTO REIMBURSEMENT VALUES(NULL,?,?,?,?, NULL,?,?,?,?)";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
@@ -94,11 +94,13 @@ public class ReimbursementDAO implements ReimbursementRepository
 	 */
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
-	    final String SQL = "UPDATE REIMBURSEMENT SET R_RESOLVED = ?, MANAGER_ID = ?, RS_ID = ?, RT_ID = ?";
+	    final String SQL = "UPDATE REIMBURSEMENT SET R_RESOLVED = ?, RS_ID = ?, RT_ID = ?";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
 	    statement.setTimestamp(++parameterIndex, Timestamp.valueOf(reimbursement.getResolved()));
+	    // I Believe you should be a able to update the time of resolved reimbursement.
+	    // for when one updates the status possibly type
 	    statement.setInt(++parameterIndex, reimbursement.getStatus().getId());
 	    statement.setInt(++parameterIndex, reimbursement.getType().getId());
 
