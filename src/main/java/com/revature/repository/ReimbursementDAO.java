@@ -183,7 +183,7 @@ public class ReimbursementDAO implements ReimbursementRepository
 	Set<Reimbursement> reimbursements = new HashSet<>();
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
-	    final String SQL = "SELECT RE.R_ID, RE.R_REQUESTED, RE.R_RESOLVED, RE.R_AMOUNT, RE.R_DESCRIPTION, RE.EMPLOYEE_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE, RE.MANAGER_ID, RE.RS_ID, RS.RS_STATUS, RE.RT_ID, RT.RT_TYPE FROM REIMBURSEMENT RE INNER JOIN USER_T U ON RE.EMPLOYEE_ID = U.U_ID INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID INNER JOIN REIMBURSEMENT_STATUS RS ON RE.RS_ID = RS.RS_ID INNER JOIN REIMBURSEMENT_TYPE RT ON RE.RT_ID = RT.RT_ID WHERE RE.R_ID = ?";
+	    final String SQL = "SELECT RE.R_ID, RE.R_REQUESTED, RE.R_RESOLVED, RE.R_AMOUNT, RE.R_DESCRIPTION, RE.EMPLOYEE_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE, RE.MANAGER_ID, RE.RS_ID, RS.RS_STATUS, RE.RT_ID, RT.RT_TYPE FROM REIMBURSEMENT RE INNER JOIN USER_T U ON RE.EMPLOYEE_ID = U.U_ID INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID INNER JOIN REIMBURSEMENT_STATUS RS ON RE.RS_ID = RS.RS_ID INNER JOIN REIMBURSEMENT_TYPE RT ON RE.RT_ID = RT.RT_ID WHERE U.U_ID = ? AND RS.RS_STATUS = 'PENDING'";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    statement.setInt(1, employeeId);
 	    ResultSet resultSet = statement.executeQuery();
@@ -226,15 +226,18 @@ public class ReimbursementDAO implements ReimbursementRepository
 		type.setId(resultSet.getInt("RT_ID"));
 		type.setType(resultSet.getString("RT_TYPE"));
 		reimbursement.setType(type);
-		return reimbursement;
+
+		reimbursements.add(reimbursement);
 	    }
+	    return reimbursements;
 
 	}
 	catch (SQLException e)
 	{
-	    logger.error("could not get reimbursement based on ID", e);
+	    logger.error("could not get reimbursements based on employee", e);
 	}
-	return null;
+
+	return new HashSet<>();
     }
 
     @Override
