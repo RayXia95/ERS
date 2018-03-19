@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,9 +20,15 @@ import com.revature.util.ErsRepositoryUtil;
 public class ReimbursementDAO implements ReimbursementRepository
 {
     private static final Logger logger = Logger.getLogger(ReimbursementDAO.class);
+    private static ReimbursementDAO reimburseDAO = new ReimbursementDAO();
 
     private ReimbursementDAO()
     {
+    }
+
+    public static ReimbursementDAO getReimbursementDAO()
+    {
+	return reimburseDAO;
     }
 
     @Override
@@ -31,32 +36,16 @@ public class ReimbursementDAO implements ReimbursementRepository
     {
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
-	    /**
-	     * Id int null
-	     * LOCALDATETIME Requested
-	     * LOCALDATETIME Resolved //
-	     * amount double
-	     * String description
-	     * receipt object null
-	     * Employee requester
-	     * Employee approver
-	     * ReimbursementStatus status
-	     * ReimbursementType type
-	     * 
-	     * 	
-	     */
 	    logger.trace("Was able to get connection to insert");
-	    final String SQL = "INSERT INTO REIMBURSEMENT VALUES(NULL,?,?,?,?, NULL,?,?,?,?)";
+	    final String SQL = "INSERT INTO REIMBURSEMENT VALUES(NULL,?,NULL,?,?, NULL,?,?,?,?)";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
 	    statement.setTimestamp(++parameterIndex, Timestamp.valueOf(reimbursement.getRequested()));
-	    statement.setTimestamp(++parameterIndex, Timestamp.valueOf(reimbursement.getResolved()));
 	    statement.setDouble(++parameterIndex, reimbursement.getAmount());
 	    statement.setString(++parameterIndex, reimbursement.getDescription());
-	    //statement.setBlob(++parameterIndex, (Blob) reimbursement.getRequester());
 	    statement.setInt(++parameterIndex, reimbursement.getRequester().getId());
-	    statement.setInt(++parameterIndex, reimbursement.getApprover().getId()); // manager ID???
+	    statement.setInt(++parameterIndex, reimbursement.getApprover().getId());
 	    statement.setInt(++parameterIndex, reimbursement.getStatus().getId());
 	    statement.setInt(++parameterIndex, reimbursement.getType().getId());
 
@@ -459,17 +448,6 @@ public class ReimbursementDAO implements ReimbursementRepository
 
     public static void main(String[] args)
     {
-	EmployeeRole employeeRole = new EmployeeRole(1, "EMPLOYEE");
-	EmployeeRole employeeRoleMan = new EmployeeRole(2, "MANAGER");
-
-	Employee employee = new Employee(21, "RAYMOND", "XIA", "RayXia95", "hello", "raymondxia95@gmail.com",
-		employeeRole);
-	Employee manager = new Employee(1, "PETER", "ALAGNA", "PALAGNAJR", "hello", "PETER.ALAGNA@REVATURE.COM",
-		employeeRoleMan);
-
-	Reimbursement reimbursement = new Reimbursement(0, LocalDateTime.now(), null, 1.5, "Dummy testing", employee,
-		manager, new ReimbursementStatus(1, "PENDING"), new ReimbursementType(1, "OTHERS"));
-	new ReimbursementDAO().insert(reimbursement);
     }
 
 }
