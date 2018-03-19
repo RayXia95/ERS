@@ -243,29 +243,215 @@ public class ReimbursementDAO implements ReimbursementRepository
     @Override
     public Set<Reimbursement> selectFinalized(int employeeId)
     {
-	// TODO Auto-generated method stub
-	return null;
+	Set<Reimbursement> reimbursements = new HashSet<>();
+	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
+	{
+	    final String SQL = "SELECT RE.R_ID, RE.R_REQUESTED, RE.R_RESOLVED, RE.R_AMOUNT, RE.R_DESCRIPTION, RE.EMPLOYEE_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE, RE.MANAGER_ID, RE.RS_ID, RS.RS_STATUS, RE.RT_ID, RT.RT_TYPE FROM REIMBURSEMENT RE INNER JOIN USER_T U ON RE.EMPLOYEE_ID = U.U_ID INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID INNER JOIN REIMBURSEMENT_STATUS RS ON RE.RS_ID = RS.RS_ID INNER JOIN REIMBURSEMENT_TYPE RT ON RE.RT_ID = RT.RT_ID WHERE U.U_ID = ? AND RS.RS_STATUS = 'APPROVED' OR RS.RS_STATUS = 'DECLINED'";
+	    PreparedStatement statement = connection.prepareStatement(SQL);
+	    statement.setInt(1, employeeId);
+	    ResultSet resultSet = statement.executeQuery();
+
+	    while (resultSet.next())
+	    {
+		Reimbursement reimbursement = new Reimbursement();
+		Employee employee = new Employee();
+		Employee manager = new Employee();
+		EmployeeRole employeeRole = new EmployeeRole();
+		ReimbursementStatus status = new ReimbursementStatus();
+		ReimbursementType type = new ReimbursementType();
+
+		reimbursement.setId(resultSet.getInt("R_ID"));
+		reimbursement.setRequested(resultSet.getTimestamp("R_REQUESTED").toLocalDateTime());
+		reimbursement.setResolved(resultSet.getTimestamp("R_RESOLVED").toLocalDateTime());
+		reimbursement.setAmount(resultSet.getDouble("R_AMOUNT"));
+		reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
+
+		employee.setId(resultSet.getInt("U_ID"));
+		employee.setFirstName(resultSet.getString("U_FIRSTNAME"));
+		employee.setLastName(resultSet.getString("U_LASTNAME"));
+		employee.setUsername(resultSet.getString("U_USERNAME"));
+		employee.setPassword(resultSet.getString("U_PASSWORD"));
+		employee.setEmail(resultSet.getString("U_ID"));
+
+		employeeRole.setId(resultSet.getInt("UR_ID"));
+		employeeRole.setType(resultSet.getString("UR_TYPE"));
+
+		employee.setEmployeeRole(employeeRole);
+		manager.setId(resultSet.getInt("MANAGER_ID")); // manager is not fully set up, is it okay?
+
+		reimbursement.setRequester(employee);
+		reimbursement.setApprover(manager);
+
+		status.setId(resultSet.getInt("RS_ID"));
+		status.setStatus(resultSet.getString("RS_STATUS"));
+		reimbursement.setStatus(status);
+
+		type.setId(resultSet.getInt("RT_ID"));
+		type.setType(resultSet.getString("RT_TYPE"));
+		reimbursement.setType(type);
+
+		reimbursements.add(reimbursement);
+	    }
+	    return reimbursements;
+
+	}
+	catch (SQLException e)
+	{
+	    logger.error("could not get finalized reimbursements based on employeeID ", e);
+	}
+
+	return new HashSet<>();
     }
 
     @Override
     public Set<Reimbursement> selectAllPending()
     {
-	// TODO Auto-generated method stub
-	return null;
+	Set<Reimbursement> reimbursements = new HashSet<>();
+	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
+	{
+	    final String SQL = "SELECT RE.R_ID, RE.R_REQUESTED, RE.R_RESOLVED, RE.R_AMOUNT, RE.R_DESCRIPTION, RE.EMPLOYEE_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE, RE.MANAGER_ID, RE.RS_ID, RS.RS_STATUS, RE.RT_ID, RT.RT_TYPE FROM REIMBURSEMENT RE INNER JOIN USER_T U ON RE.EMPLOYEE_ID = U.U_ID INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID INNER JOIN REIMBURSEMENT_STATUS RS ON RE.RS_ID = RS.RS_ID INNER JOIN REIMBURSEMENT_TYPE RT ON RE.RT_ID = RT.RT_ID WHERE RS.RS_STATUS = 'PENDING'";
+	    PreparedStatement statement = connection.prepareStatement(SQL);
+	    ResultSet resultSet = statement.executeQuery();
+
+	    while (resultSet.next())
+	    {
+		Reimbursement reimbursement = new Reimbursement();
+		Employee employee = new Employee();
+		Employee manager = new Employee();
+		EmployeeRole employeeRole = new EmployeeRole();
+		ReimbursementStatus status = new ReimbursementStatus();
+		ReimbursementType type = new ReimbursementType();
+
+		reimbursement.setId(resultSet.getInt("R_ID"));
+		reimbursement.setRequested(resultSet.getTimestamp("R_REQUESTED").toLocalDateTime());
+		reimbursement.setResolved(resultSet.getTimestamp("R_RESOLVED").toLocalDateTime());
+		reimbursement.setAmount(resultSet.getDouble("R_AMOUNT"));
+		reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
+
+		employee.setId(resultSet.getInt("U_ID"));
+		employee.setFirstName(resultSet.getString("U_FIRSTNAME"));
+		employee.setLastName(resultSet.getString("U_LASTNAME"));
+		employee.setUsername(resultSet.getString("U_USERNAME"));
+		employee.setPassword(resultSet.getString("U_PASSWORD"));
+		employee.setEmail(resultSet.getString("U_ID"));
+
+		employeeRole.setId(resultSet.getInt("UR_ID"));
+		employeeRole.setType(resultSet.getString("UR_TYPE"));
+
+		employee.setEmployeeRole(employeeRole);
+		manager.setId(resultSet.getInt("MANAGER_ID")); // manager is not fully set up, is it okay?
+
+		reimbursement.setRequester(employee);
+		reimbursement.setApprover(manager);
+
+		status.setId(resultSet.getInt("RS_ID"));
+		status.setStatus(resultSet.getString("RS_STATUS"));
+		reimbursement.setStatus(status);
+
+		type.setId(resultSet.getInt("RT_ID"));
+		type.setType(resultSet.getString("RT_TYPE"));
+		reimbursement.setType(type);
+
+		reimbursements.add(reimbursement);
+	    }
+	    return reimbursements;
+
+	}
+	catch (SQLException e)
+	{
+	    logger.error("could not get reimbursements based on employee", e);
+	}
+
+	return new HashSet<>();
     }
 
     @Override
     public Set<Reimbursement> selectAllFinalized()
     {
-	// TODO Auto-generated method stub
-	return null;
+	Set<Reimbursement> reimbursements = new HashSet<>();
+	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
+	{
+	    final String SQL = "SELECT RE.R_ID, RE.R_REQUESTED, RE.R_RESOLVED, RE.R_AMOUNT, RE.R_DESCRIPTION, RE.EMPLOYEE_ID, U.U_FIRSTNAME, U.U_LASTNAME, U.U_USERNAME, U.U_PASSWORD, U.U_EMAIL, U.UR_ID, UR.UR_TYPE, RE.MANAGER_ID, RE.RS_ID, RS.RS_STATUS, RE.RT_ID, RT.RT_TYPE FROM REIMBURSEMENT RE INNER JOIN USER_T U ON RE.EMPLOYEE_ID = U.U_ID INNER JOIN USER_ROLE UR ON U.UR_ID = UR.UR_ID INNER JOIN REIMBURSEMENT_STATUS RS ON RE.RS_ID = RS.RS_ID INNER JOIN REIMBURSEMENT_TYPE RT ON RE.RT_ID = RT.RT_ID WHERE RS.RS_STATUS = 'APPROVED' OR RS.RS_STATUS = 'DECLINED'";
+	    PreparedStatement statement = connection.prepareStatement(SQL);
+	    ResultSet resultSet = statement.executeQuery();
+
+	    while (resultSet.next())
+	    {
+		Reimbursement reimbursement = new Reimbursement();
+		Employee employee = new Employee();
+		Employee manager = new Employee();
+		EmployeeRole employeeRole = new EmployeeRole();
+		ReimbursementStatus status = new ReimbursementStatus();
+		ReimbursementType type = new ReimbursementType();
+
+		reimbursement.setId(resultSet.getInt("R_ID"));
+		reimbursement.setRequested(resultSet.getTimestamp("R_REQUESTED").toLocalDateTime());
+		reimbursement.setResolved(resultSet.getTimestamp("R_RESOLVED").toLocalDateTime());
+		reimbursement.setAmount(resultSet.getDouble("R_AMOUNT"));
+		reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
+
+		employee.setId(resultSet.getInt("U_ID"));
+		employee.setFirstName(resultSet.getString("U_FIRSTNAME"));
+		employee.setLastName(resultSet.getString("U_LASTNAME"));
+		employee.setUsername(resultSet.getString("U_USERNAME"));
+		employee.setPassword(resultSet.getString("U_PASSWORD"));
+		employee.setEmail(resultSet.getString("U_ID"));
+
+		employeeRole.setId(resultSet.getInt("UR_ID"));
+		employeeRole.setType(resultSet.getString("UR_TYPE"));
+
+		employee.setEmployeeRole(employeeRole);
+		manager.setId(resultSet.getInt("MANAGER_ID")); // manager is not fully set up, is it okay?
+
+		reimbursement.setRequester(employee);
+		reimbursement.setApprover(manager);
+
+		status.setId(resultSet.getInt("RS_ID"));
+		status.setStatus(resultSet.getString("RS_STATUS"));
+		reimbursement.setStatus(status);
+
+		type.setId(resultSet.getInt("RT_ID"));
+		type.setType(resultSet.getString("RT_TYPE"));
+		reimbursement.setType(type);
+
+		reimbursements.add(reimbursement);
+	    }
+	    return reimbursements;
+
+	}
+	catch (SQLException e)
+	{
+	    logger.error("could not get reimbursements based on employee", e);
+	}
+
+	return new HashSet<>();
     }
 
     @Override
     public Set<ReimbursementType> selectTypes()
     {
-	// TODO Auto-generated method stub
-	return null;
+	Set<ReimbursementType> reimbursementTypes = new HashSet<>();
+	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
+	{
+	    final String SQL = "SELECT * FROM REIMBURSEMENT_TYPE";
+	    PreparedStatement statement = connection.prepareStatement(SQL);
+	    ResultSet resultSet = statement.executeQuery();
+
+	    while (resultSet.next())
+	    {
+		ReimbursementType reimbursementType = new ReimbursementType();
+		reimbursementType.setId(resultSet.getInt("RT_ID"));
+		reimbursementType.setType(resultSet.getString("RT_TYPE"));
+
+		reimbursementTypes.add(reimbursementType);
+	    }
+	    return reimbursementTypes;
+	}
+	catch (SQLException e)
+	{
+	    logger.error("Could not get reimbursementType", e);
+	}
+	return new HashSet<>();
     }
 
 }
