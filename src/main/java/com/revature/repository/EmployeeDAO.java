@@ -128,7 +128,7 @@ public class EmployeeDAO implements EmployeeRepository
 	{
 	    logger.error("Could not get specific employee", e);
 	}
-	return new Employee();
+	return null;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class EmployeeDAO implements EmployeeRepository
 	{
 	    logger.error("Could not get specific employee", e);
 	}
-	return new Employee();
+	return null;
     }
 
     @Override
