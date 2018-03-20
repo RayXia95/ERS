@@ -70,29 +70,17 @@ public class ReimbursementDAO implements ReimbursementRepository
     @Override
     public boolean update(Reimbursement reimbursement)
     {
-	/**
-	 * R_ID	NUMBER
-	    R_REQUESTED	TIMESTAMP(6)
-	    R_RESOLVED	TIMESTAMP(6)	//
-	    R_AMOUNT	NUMBER(8,2)	
-	    R_DESCRIPTION	VARCHAR2(4000 BYTE) 
-	    R_RECEIPT	BLOB
-	    EMPLOYEE_ID	NUMBER
-	    MANAGER_ID	NUMBER	
-	    RS_ID	NUMBER	//
-	    RT_ID	NUMBER	//
-	 */
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
-	    final String SQL = "UPDATE REIMBURSEMENT SET R_RESOLVED = ?, RS_ID = ?, RT_ID = ?";
+	    final String SQL = "UPDATE REIMBURSEMENT SET R_RESOLVED = ?, RS_ID = ? WHERE R_ID = ?";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
 	    statement.setTimestamp(++parameterIndex, Timestamp.valueOf(reimbursement.getResolved()));
 	    // I Believe you should be a able to update the time of resolved reimbursement.
-	    // for when one updates the status possibly type
+	    // for when one updates the status
 	    statement.setInt(++parameterIndex, reimbursement.getStatus().getId());
-	    statement.setInt(++parameterIndex, reimbursement.getType().getId());
+	    statement.setInt(++parameterIndex, reimbursement.getId());
 
 	    if ( statement.executeUpdate() != 0 )
 	    {
@@ -444,10 +432,6 @@ public class ReimbursementDAO implements ReimbursementRepository
 	    logger.error("Could not get reimbursementType", e);
 	}
 	return new HashSet<>();
-    }
-
-    public static void main(String[] args)
-    {
     }
 
 }
