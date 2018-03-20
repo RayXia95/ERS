@@ -156,6 +156,7 @@ public class ReimbursementDAO implements ReimbursementRepository
 		type.setId(resultSet.getInt("RT_ID"));
 		type.setType(resultSet.getString("RT_TYPE"));
 		reimbursement.setType(type);
+
 		return reimbursement;
 	    }
 
@@ -193,25 +194,31 @@ public class ReimbursementDAO implements ReimbursementRepository
 
 		reimbursement.setId(resultSet.getInt("R_ID"));
 		reimbursement.setRequested(resultSet.getTimestamp("R_REQUESTED").toLocalDateTime());
-		reimbursement.setResolved(resultSet.getTimestamp("R_RESOLVED").toLocalDateTime());
-		reimbursement.setAmount(resultSet.getDouble("R_AMOUNT"));
-		reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
 
-		employee.setId(resultSet.getInt("U_ID"));
+		reimbursement.setAmount(resultSet.getDouble("R_AMOUNT"));
+
+		if ( resultSet.getString("R_DESCRIPTION") != null )
+		{
+		    reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
+		}
+		employee.setId(resultSet.getInt("EMPLOYEE_ID"));
 		employee.setFirstName(resultSet.getString("U_FIRSTNAME"));
 		employee.setLastName(resultSet.getString("U_LASTNAME"));
 		employee.setUsername(resultSet.getString("U_USERNAME"));
 		employee.setPassword(resultSet.getString("U_PASSWORD"));
-		employee.setEmail(resultSet.getString("U_ID"));
+		employee.setEmail(resultSet.getString("U_EMAIL"));
 
 		employeeRole.setId(resultSet.getInt("UR_ID"));
 		employeeRole.setType(resultSet.getString("UR_TYPE"));
 
 		employee.setEmployeeRole(employeeRole);
-		manager.setId(resultSet.getInt("MANAGER_ID")); // manager is not fully set up, is it okay?
-
 		reimbursement.setRequester(employee);
-		reimbursement.setApprover(manager);
+
+		if ( resultSet.getInt("MANAGER_ID") != 0 )
+		{
+		    manager.setId(resultSet.getInt("MANAGER_ID"));
+		    reimbursement.setApprover(manager);
+		}
 
 		status.setId(resultSet.getInt("RS_ID"));
 		status.setStatus(resultSet.getString("RS_STATUS"));
@@ -256,24 +263,30 @@ public class ReimbursementDAO implements ReimbursementRepository
 
 		reimbursement.setId(resultSet.getInt("R_ID"));
 		reimbursement.setRequested(resultSet.getTimestamp("R_REQUESTED").toLocalDateTime());
+
+		// all finalized should have resolved timestamp
 		reimbursement.setResolved(resultSet.getTimestamp("R_RESOLVED").toLocalDateTime());
 		reimbursement.setAmount(resultSet.getDouble("R_AMOUNT"));
-		reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
 
-		employee.setId(resultSet.getInt("U_ID"));
+		if ( resultSet.getString("R_DESCRIPTION") != null )
+		{
+		    reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
+		}
+		employee.setId(resultSet.getInt("EMPLOYEE_ID"));
 		employee.setFirstName(resultSet.getString("U_FIRSTNAME"));
 		employee.setLastName(resultSet.getString("U_LASTNAME"));
 		employee.setUsername(resultSet.getString("U_USERNAME"));
 		employee.setPassword(resultSet.getString("U_PASSWORD"));
-		employee.setEmail(resultSet.getString("U_ID"));
+		employee.setEmail(resultSet.getString("U_EMAIL"));
 
 		employeeRole.setId(resultSet.getInt("UR_ID"));
 		employeeRole.setType(resultSet.getString("UR_TYPE"));
 
 		employee.setEmployeeRole(employeeRole);
-		manager.setId(resultSet.getInt("MANAGER_ID")); // manager is not fully set up, is it okay?
-
 		reimbursement.setRequester(employee);
+
+		//Resolved should have a manager ID
+		manager.setId(resultSet.getInt("MANAGER_ID"));
 		reimbursement.setApprover(manager);
 
 		status.setId(resultSet.getInt("RS_ID"));
@@ -318,25 +331,31 @@ public class ReimbursementDAO implements ReimbursementRepository
 
 		reimbursement.setId(resultSet.getInt("R_ID"));
 		reimbursement.setRequested(resultSet.getTimestamp("R_REQUESTED").toLocalDateTime());
-		reimbursement.setResolved(resultSet.getTimestamp("R_RESOLVED").toLocalDateTime());
-		reimbursement.setAmount(resultSet.getDouble("R_AMOUNT"));
-		reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
 
-		employee.setId(resultSet.getInt("U_ID"));
+		reimbursement.setAmount(resultSet.getDouble("R_AMOUNT"));
+
+		if ( resultSet.getString("R_DESCRIPTION") != null )
+		{
+		    reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
+		}
+		employee.setId(resultSet.getInt("EMPLOYEE_ID"));
 		employee.setFirstName(resultSet.getString("U_FIRSTNAME"));
 		employee.setLastName(resultSet.getString("U_LASTNAME"));
 		employee.setUsername(resultSet.getString("U_USERNAME"));
 		employee.setPassword(resultSet.getString("U_PASSWORD"));
-		employee.setEmail(resultSet.getString("U_ID"));
+		employee.setEmail(resultSet.getString("U_EMAIL"));
 
 		employeeRole.setId(resultSet.getInt("UR_ID"));
 		employeeRole.setType(resultSet.getString("UR_TYPE"));
 
 		employee.setEmployeeRole(employeeRole);
-		manager.setId(resultSet.getInt("MANAGER_ID")); // manager is not fully set up, is it okay?
-
 		reimbursement.setRequester(employee);
-		reimbursement.setApprover(manager);
+
+		if ( resultSet.getInt("MANAGER_ID") != 0 )
+		{
+		    manager.setId(resultSet.getInt("MANAGER_ID"));
+		    reimbursement.setApprover(manager);
+		}
 
 		status.setId(resultSet.getInt("RS_ID"));
 		status.setStatus(resultSet.getString("RS_STATUS"));
@@ -353,7 +372,7 @@ public class ReimbursementDAO implements ReimbursementRepository
 	}
 	catch (SQLException e)
 	{
-	    logger.error("could not get reimbursements based on employee", e);
+	    logger.error("could not get pending reimbursements", e);
 	}
 
 	return new HashSet<>();
@@ -380,24 +399,30 @@ public class ReimbursementDAO implements ReimbursementRepository
 
 		reimbursement.setId(resultSet.getInt("R_ID"));
 		reimbursement.setRequested(resultSet.getTimestamp("R_REQUESTED").toLocalDateTime());
+
+		// all finalized should have resolved timestamp
 		reimbursement.setResolved(resultSet.getTimestamp("R_RESOLVED").toLocalDateTime());
 		reimbursement.setAmount(resultSet.getDouble("R_AMOUNT"));
-		reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
 
-		employee.setId(resultSet.getInt("U_ID"));
+		if ( resultSet.getString("R_DESCRIPTION") != null )
+		{
+		    reimbursement.setDescription(resultSet.getString("R_DESCRIPTION"));
+		}
+		employee.setId(resultSet.getInt("EMPLOYEE_ID"));
 		employee.setFirstName(resultSet.getString("U_FIRSTNAME"));
 		employee.setLastName(resultSet.getString("U_LASTNAME"));
 		employee.setUsername(resultSet.getString("U_USERNAME"));
 		employee.setPassword(resultSet.getString("U_PASSWORD"));
-		employee.setEmail(resultSet.getString("U_ID"));
+		employee.setEmail(resultSet.getString("U_EMAIL"));
 
 		employeeRole.setId(resultSet.getInt("UR_ID"));
 		employeeRole.setType(resultSet.getString("UR_TYPE"));
 
 		employee.setEmployeeRole(employeeRole);
-		manager.setId(resultSet.getInt("MANAGER_ID")); // manager is not fully set up, is it okay?
-
 		reimbursement.setRequester(employee);
+
+		//Resolved should have a manager ID
+		manager.setId(resultSet.getInt("MANAGER_ID"));
 		reimbursement.setApprover(manager);
 
 		status.setId(resultSet.getInt("RS_ID"));
@@ -410,12 +435,13 @@ public class ReimbursementDAO implements ReimbursementRepository
 
 		reimbursements.add(reimbursement);
 	    }
+
 	    return reimbursements;
 
 	}
 	catch (SQLException e)
 	{
-	    logger.error("could not get reimbursements based on employee", e);
+	    logger.error("could not get finalized reimbursements", e);
 	}
 
 	return new HashSet<>();
