@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,11 +36,10 @@ public class ReimbursementDAO implements ReimbursementRepository
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
 	    logger.trace("Was able to get connection to insert");
-	    final String SQL = "INSERT INTO REIMBURSEMENT VALUES(NULL,?,NULL,?,?, NULL,?,?,?,?)";
+	    final String SQL = "INSERT INTO REIMBURSEMENT VALUES(NULL, CURRENT_TIMESTAMP, NULL, ?, ?, NULL,?,?,?,?)";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
-	    statement.setTimestamp(++parameterIndex, Timestamp.valueOf(reimbursement.getRequested()));
 	    statement.setDouble(++parameterIndex, reimbursement.getAmount());
 	    statement.setString(++parameterIndex, reimbursement.getDescription());
 	    statement.setInt(++parameterIndex, reimbursement.getRequester().getId());
@@ -72,13 +70,10 @@ public class ReimbursementDAO implements ReimbursementRepository
     {
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
-	    final String SQL = "UPDATE REIMBURSEMENT SET R_RESOLVED = ?, RS_ID = ? WHERE R_ID = ?";
+	    final String SQL = "UPDATE REIMBURSEMENT SET R_RESOLVED = CURRENT_TIMESTAMP, RS_ID = ? WHERE R_ID = ?";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
-	    statement.setTimestamp(++parameterIndex, Timestamp.valueOf(reimbursement.getResolved()));
-	    // I Believe you should be a able to update the time of resolved reimbursement.
-	    // for when one updates the status
 	    statement.setInt(++parameterIndex, reimbursement.getStatus().getId());
 	    statement.setInt(++parameterIndex, reimbursement.getId());
 

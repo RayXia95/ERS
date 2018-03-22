@@ -15,6 +15,19 @@ public class ReimbursementServiceImpl implements ReimbursementService
     {
 
     }
+    /*
+     * R_ID          NOT NULL 
+    R_REQUESTED   NOT NULL  
+    R_RESOLVED             
+    R_AMOUNT      NOT NULL    
+    R_DESCRIPTION          
+    R_RECEIPT                       
+    EMPLOYEE_ID   NOT NULL 
+    MANAGER_ID                    
+    RS_ID         NOT NULL       
+    RT_ID         NOT NULL      
+    
+     */
 
     public ReimbursementServiceImpl getReimbursementService()
     {
