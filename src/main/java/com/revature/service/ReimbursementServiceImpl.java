@@ -6,6 +6,7 @@ import com.revature.model.Employee;
 import com.revature.model.Reimbursement;
 import com.revature.model.ReimbursementType;
 import com.revature.repository.ReimbursementDAO;
+import com.revature.util.UserRoles;
 
 public class ReimbursementServiceImpl implements ReimbursementService
 {
@@ -15,6 +16,12 @@ public class ReimbursementServiceImpl implements ReimbursementService
     {
 
     }
+
+    public ReimbursementServiceImpl getReimbursementService()
+    {
+	return reimbursementService;
+    }
+
     /*
      * R_ID          NOT NULL 
     R_REQUESTED   NOT NULL  
@@ -28,22 +35,26 @@ public class ReimbursementServiceImpl implements ReimbursementService
     RT_ID         NOT NULL      
     
      */
-
-    public ReimbursementServiceImpl getReimbursementService()
-    {
-	return reimbursementService;
-    }
-
     @Override
     public boolean submitRequest(Reimbursement reimbursement)
     {
-	return ReimbursementDAO.getReimbursementDAO().insert(reimbursement);
+	if ( reimbursement.getApprover().getEmployeeRole().getId() == UserRoles.EMPLOYEE_ROLE )
+	{
+	    return ReimbursementDAO.getReimbursementDAO().insert(reimbursement);
+	}
+
+	return false;
     }
 
     @Override
     public boolean finalizeRequest(Reimbursement reimbursement)
     {
-	return ReimbursementDAO.getReimbursementDAO().update(reimbursement);
+	if ( reimbursement.getApprover().getEmployeeRole().getId() == UserRoles.MANAGER_ROLE )
+	{
+	    return ReimbursementDAO.getReimbursementDAO().update(reimbursement);
+	}
+
+	return false;
     }
 
     @Override
