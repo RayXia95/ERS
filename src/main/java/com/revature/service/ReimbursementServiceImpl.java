@@ -2,6 +2,9 @@ package com.revature.service;
 
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
+import com.revature.exception.ReimbursementAmtLessThanZero;
 import com.revature.model.Employee;
 import com.revature.model.Reimbursement;
 import com.revature.model.ReimbursementType;
@@ -9,6 +12,9 @@ import com.revature.repository.ReimbursementDAO;
 
 public class ReimbursementServiceImpl implements ReimbursementService
 {
+
+    private static final Logger logger = Logger.getLogger(ReimbursementServiceImpl.class);
+
     private static ReimbursementServiceImpl reimbursementService = new ReimbursementServiceImpl();
 
     private ReimbursementServiceImpl()
@@ -37,6 +43,18 @@ public class ReimbursementServiceImpl implements ReimbursementService
     @Override
     public boolean submitRequest(Reimbursement reimbursement)
     {
+	try
+	{
+	    if ( reimbursement.getAmount() < 0 )
+	    {
+		throw new ReimbursementAmtLessThanZero();
+	    }
+	}
+	catch (ReimbursementAmtLessThanZero e)
+	{
+	    logger.error("Can not request Reimbursement of less than zero");
+	}
+
 	return ReimbursementDAO.getReimbursementDAO().insert(reimbursement);
     }
 

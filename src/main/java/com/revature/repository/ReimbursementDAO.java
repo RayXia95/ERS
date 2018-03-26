@@ -45,6 +45,7 @@ public class ReimbursementDAO implements ReimbursementRepository
 	    statement.setInt(++parameterIndex, reimbursement.getRequester().getId());
 	    statement.setInt(++parameterIndex, reimbursement.getApprover().getId());
 	    statement.setInt(++parameterIndex, reimbursement.getStatus().getId());
+	    // status when inserting technically should always be pending
 	    statement.setInt(++parameterIndex, reimbursement.getType().getId());
 
 	    if ( statement.executeUpdate() != 0 )
