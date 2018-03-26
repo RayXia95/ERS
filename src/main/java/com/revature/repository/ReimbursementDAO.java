@@ -36,7 +36,7 @@ public class ReimbursementDAO implements ReimbursementRepository
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
 	    logger.trace("Was able to get connection to insert");
-	    final String SQL = "INSERT INTO REIMBURSEMENT VALUES(NULL, CURRENT_TIMESTAMP, NULL, ?, ?, NULL,?,?,?,?)";
+	    final String SQL = "INSERT INTO REIMBURSEMENT VALUES(NULL, CURRENT_TIMESTAMP, NULL, ?, ?, NULL,?,?,1,?)";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
 
@@ -44,8 +44,6 @@ public class ReimbursementDAO implements ReimbursementRepository
 	    statement.setString(++parameterIndex, reimbursement.getDescription());
 	    statement.setInt(++parameterIndex, reimbursement.getRequester().getId());
 	    statement.setInt(++parameterIndex, reimbursement.getApprover().getId());
-	    statement.setInt(++parameterIndex, reimbursement.getStatus().getId());
-	    // status when inserting technically should always be pending
 	    statement.setInt(++parameterIndex, reimbursement.getType().getId());
 
 	    if ( statement.executeUpdate() != 0 )

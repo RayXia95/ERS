@@ -5,10 +5,14 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.revature.exception.ReimbursementAmtLessThanZero;
+import com.revature.exception.ReimbursementNotValidStatus;
+import com.revature.exception.ReimbursementNotValidType;
 import com.revature.model.Employee;
 import com.revature.model.Reimbursement;
 import com.revature.model.ReimbursementType;
 import com.revature.repository.ReimbursementDAO;
+import com.revature.util.ReimbursementStatuses;
+import com.revature.util.ReimbursementTypes;
 
 public class ReimbursementServiceImpl implements ReimbursementService
 {
@@ -27,19 +31,6 @@ public class ReimbursementServiceImpl implements ReimbursementService
 	return reimbursementService;
     }
 
-    /*
-     * R_ID          NOT NULL 
-    R_REQUESTED   NOT NULL  
-    R_RESOLVED             
-    R_AMOUNT      NOT NULL    
-    R_DESCRIPTION          
-    R_RECEIPT                       
-    EMPLOYEE_ID   NOT NULL 
-    MANAGER_ID                    
-    RS_ID         NOT NULL       
-    RT_ID         NOT NULL      
-    
-     */
     @Override
     public boolean submitRequest(Reimbursement reimbursement)
     {
@@ -49,18 +40,34 @@ public class ReimbursementServiceImpl implements ReimbursementService
 	    {
 		throw new ReimbursementAmtLessThanZero();
 	    }
+	    if ( reimbursement.getType().getId() < ReimbursementTypes.OTHER
+		    & reimbursement.getType().getId() > ReimbursementTypes.TRAVELING )
+	    {
+		throw new ReimbursementNotValidType();
+	    }
+
+	    return ReimbursementDAO.getReimbursementDAO().insert(reimbursement);
 	}
 	catch (ReimbursementAmtLessThanZero e)
 	{
 	    logger.error("Can not request Reimbursement of less than zero");
 	}
+	catch (ReimbursementNotValidType d)
+	{
+	    logger.error("Can not have a different reimbursement type");
+	}
 
-	return ReimbursementDAO.getReimbursementDAO().insert(reimbursement);
+	return false;
     }
 
     @Override
     public boolean finalizeRequest(Reimbursement reimbursement)
     {
+	if ( reimbursement.getStatus().getId() < ReimbursementStatuses.PENDING
+		& reimbursement.getStatus().getId() > ReimbursementStatuses.APPROVED )
+	{
+	    throw new ReimbursementNotValidStatus();
+	}
 	return ReimbursementDAO.getReimbursementDAO().update(reimbursement);
     }
 
