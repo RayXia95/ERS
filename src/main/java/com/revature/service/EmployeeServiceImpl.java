@@ -25,7 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService
     @Override
     public Employee authenticate(Employee employee)
     {
-	Employee loggedEmployee = EmployeeDAO.getEmployeeDAO().select(employee.getUsername());
+	Employee loggedEmployee = EmployeeDAO.getEmployeeDAO().select(employee.getUsername().toUpperCase());
 
 	if ( loggedEmployee.getPassword().equals(EmployeeDAO.getEmployeeDAO().getPasswordHash(employee)) )
 	{

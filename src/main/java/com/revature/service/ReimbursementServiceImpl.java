@@ -26,7 +26,7 @@ public class ReimbursementServiceImpl implements ReimbursementService
 
     }
 
-    public ReimbursementServiceImpl getReimbursementService()
+    public static ReimbursementServiceImpl getReimbursementService()
     {
 	return reimbursementService;
     }

@@ -41,7 +41,7 @@ public class EmployeeDAO implements EmployeeRepository
 
 	    statement.setString(++parameterIndex, employee.getFirstName().toUpperCase());
 	    statement.setString(++parameterIndex, employee.getLastName().toUpperCase());
-	    statement.setString(++parameterIndex, employee.getUsername().toLowerCase());
+	    statement.setString(++parameterIndex, employee.getUsername().toUpperCase());
 	    statement.setString(++parameterIndex, employee.getPassword());
 	    statement.setString(++parameterIndex, employee.getEmail().toLowerCase());
 	    statement.setInt(++parameterIndex, employee.getEmployeeRole().getId());

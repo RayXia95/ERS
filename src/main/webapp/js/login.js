@@ -1,7 +1,7 @@
 window.onload = () => {
     /** **/
     // Redirect user to the right URL if he comes from somewhere else
-    if(window.location.pathname !== '/FrontController/login.do') {
+    if(window.location.pathname !== '/ERS/login.do') {
         window.location.replace('login.do');
     }
 
@@ -38,8 +38,8 @@ function login(data) {
     else 
     {
         // Using sessionStorage of JavaScript
-        sessionStorage.setItem("customerId", data.id);
-        sessionStorage.setItem("customerUsername", data.username);
+        sessionStorage.setItem("employeeId", data.id);
+        sessionStorage.setItem("employeeUsername", data.username);
         window.location.replace("home.do");
     }
 };

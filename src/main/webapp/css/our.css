@@ -3,15 +3,19 @@ a {
 }
 
 .navbar-default {
-    background-color: black;
+    background-color: #f26925;
 }
 
 .navbar-default .navbar-brand {
     color: white;
 }
 .navbar-default .navbar-brand:hover {
-    color: #d2d2d2;
+    color: white;
     
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: white ;
 }
 
 .btn-block {
