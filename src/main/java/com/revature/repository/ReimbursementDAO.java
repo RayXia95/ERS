@@ -41,9 +41,18 @@ public class ReimbursementDAO implements ReimbursementRepository
 	    int parameterIndex = 0;
 
 	    statement.setDouble(++parameterIndex, reimbursement.getAmount());
-	    statement.setString(++parameterIndex, reimbursement.getDescription());
+
+	    if ( reimbursement.getDescription() != null )
+	    {
+		statement.setString(++parameterIndex, reimbursement.getDescription());
+	    }
+
+	    if ( reimbursement.getApprover() != null )
+	    {
+		statement.setInt(++parameterIndex, reimbursement.getApprover().getId());
+	    }
+
 	    statement.setInt(++parameterIndex, reimbursement.getRequester().getId());
-	    statement.setInt(++parameterIndex, reimbursement.getApprover().getId());
 	    statement.setInt(++parameterIndex, reimbursement.getType().getId());
 
 	    if ( statement.executeUpdate() != 0 )

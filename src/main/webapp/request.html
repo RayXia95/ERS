@@ -1,7 +1,7 @@
 <!DOCTYPE <!DOCTYPE html>
 <html>
 <head>
-    <title>Home</title>
+    <title>Request</title>
 
     <link rel="icon" href="images/customer.ico "/>
 
@@ -26,12 +26,42 @@
                 <a href="home.do" class="navbar-brand"><strong id="username"></strong></a>
             </div>
             <div class="nav navbar-nav navbar-right">
-                    <a href="logout.do" class="navbar-brand"><strong>Logout</strong></a>
+                <a href="logout.do" class="navbar-brand"><strong>Logout</strong></a>
             </div>
         </div>
     </nav>
-    <div>
-    
+    <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Submit a reimbursement request</h3>
+            </div>
+            <div class="form-group">
+                <input id="amount" name="amount" placeholder="Amount" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input id="description" name="description" placeholder="Description" class="form-control" />
+            </div>
+            <div class="form-group">
+                <select id="type" name="type" class="form-control">
+                    <option selected>Select a type</option>
+                    <option>Traveling</option>
+                    <option>Courses</option>
+                    <option>Certifications</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                    <select id="type" name="type" class="form-control">
+                        <option selected>Select a type</option>
+                        <option>Traveling</option>
+                        <option>Courses</option>
+                        <option>Certifications</option>
+                        <option>Other</option>
+                    </select>
+            </div>
+            <div id="submitMessage"></div>
+            <button id="submit" class="btn btn-md btn-success btn-block">Submit</button>
+        </div>
     </div>
     <script src="js/request.js"></script>
 </body>

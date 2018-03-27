@@ -6,13 +6,11 @@ import org.apache.log4j.Logger;
 
 import com.revature.exception.ReimbursementAmtLessThanZero;
 import com.revature.exception.ReimbursementNotValidStatus;
-import com.revature.exception.ReimbursementNotValidType;
 import com.revature.model.Employee;
 import com.revature.model.Reimbursement;
 import com.revature.model.ReimbursementType;
 import com.revature.repository.ReimbursementDAO;
 import com.revature.util.ReimbursementStatuses;
-import com.revature.util.ReimbursementTypes;
 
 public class ReimbursementServiceImpl implements ReimbursementService
 {
@@ -40,21 +38,12 @@ public class ReimbursementServiceImpl implements ReimbursementService
 	    {
 		throw new ReimbursementAmtLessThanZero();
 	    }
-	    if ( reimbursement.getType().getId() < ReimbursementTypes.OTHER
-		    & reimbursement.getType().getId() > ReimbursementTypes.TRAVELING )
-	    {
-		throw new ReimbursementNotValidType();
-	    }
 
 	    return ReimbursementDAO.getReimbursementDAO().insert(reimbursement);
 	}
 	catch (ReimbursementAmtLessThanZero e)
 	{
 	    logger.error("Can not request Reimbursement of less than zero");
-	}
-	catch (ReimbursementNotValidType d)
-	{
-	    logger.error("Can not have a different reimbursement type");
 	}
 
 	return false;

@@ -34,21 +34,21 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 
 	//int id, LocalDateTime requested, LocalDateTime resolved, double amount, String description,
 	//Employee requester, Employee approver, ReimbursementStatus status, ReimbursementType type
-
+	// amount param, 
 	Employee employee = (Employee) request.getSession().getAttribute("loggedEmployee");
 
 	Reimbursement reimbursement = new Reimbursement(0, LocalDateTime.now(), null,
 		(double) Double.parseDouble(request.getParameter("amount")), request.getParameter("description"),
-		employee, null, null, new ReimbursementType((int) Integer.parseInt(request.getParameter("type_id")),
-			request.getParameter("type")));
+		employee, null, null, new ReimbursementType((int) Integer.parseInt(request.getParameter("typeId")),
+			request.getParameter("type").toUpperCase()));
 
 	if ( ReimbursementServiceImpl.getReimbursementService().submitRequest(reimbursement) )
 	{
-	    return new ClientMessage("Submission Successful");
+	    return new ClientMessage("SUBMISSION SUCCESSFUL");
 	}
 	else
 	{
-	    return new ClientMessage("Unable to Submmit");
+	    return new ClientMessage("UNABLE TO SUBMIT");
 	}
     }
 
