@@ -61,20 +61,6 @@ public class ReimbursementControllerAlpha implements ReimbursementController
     @Override
     public Object multipleRequests(HttpServletRequest request)
     {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public Object finalizeRequest(HttpServletRequest request)
-    {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public Object getRequestTypes(HttpServletRequest request)
-    {
 	Employee employee = (Employee) request.getSession().getAttribute("loggedEmployee");
 
 	if ( employee == null )
@@ -95,6 +81,19 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 	    return ReimbursementServiceImpl.getReimbursementService().getUserFinalizedRequests(employee);
 	}
 
+	return null;
+    }
+
+    @Override
+    public Object finalizeRequest(HttpServletRequest request)
+    {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public Object getRequestTypes(HttpServletRequest request)
+    {
 	return null;
     }
 
