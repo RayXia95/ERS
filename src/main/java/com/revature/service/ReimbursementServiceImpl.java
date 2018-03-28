@@ -10,6 +10,7 @@ import com.revature.model.Employee;
 import com.revature.model.Reimbursement;
 import com.revature.model.ReimbursementType;
 import com.revature.repository.ReimbursementDAO;
+import com.revature.util.ManangerIdUtil;
 import com.revature.util.ReimbursementStatuses;
 
 public class ReimbursementServiceImpl implements ReimbursementService
@@ -37,6 +38,11 @@ public class ReimbursementServiceImpl implements ReimbursementService
 	    if ( reimbursement.getAmount() < 0 )
 	    {
 		throw new ReimbursementAmtLessThanZero();
+	    }
+
+	    if ( reimbursement.getApprover() == null )
+	    {
+		reimbursement.getApprover().setId(ManangerIdUtil.DEFAULT_MANAGER_ID);
 	    }
 
 	    return ReimbursementDAO.getReimbursementDAO().insert(reimbursement);

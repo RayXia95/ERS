@@ -36,10 +36,12 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 	//Employee requester, Employee approver, ReimbursementStatus status, ReimbursementType type
 	// amount param, 
 	Employee employee = (Employee) request.getSession().getAttribute("loggedEmployee");
+	Employee manager = new Employee();
+	manager.setId((int) Integer.parseInt(request.getParameter("manager")));
 
 	Reimbursement reimbursement = new Reimbursement(0, LocalDateTime.now(), null,
 		(double) Double.parseDouble(request.getParameter("amount")), request.getParameter("description"),
-		employee, null, null, new ReimbursementType((int) Integer.parseInt(request.getParameter("typeId")),
+		employee, manager, null, new ReimbursementType((int) Integer.parseInt(request.getParameter("typeId")),
 			request.getParameter("type").toUpperCase()));
 
 	if ( ReimbursementServiceImpl.getReimbursementService().submitRequest(reimbursement) )

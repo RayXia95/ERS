@@ -7,28 +7,11 @@ window.onload = () => {
     document.getElementById("submit").addEventListener("click", () => {
         let amount = document.getElementById('amount').value;
         let description = document.getElementById('description').value;
+
         let typeElement = document.getElementById('type');
         let type = typeElement.options[typeElement.selectedIndex].text;
-        let typeId = 0;
 
-        switch(type)
-        {
-            case "Traveling":
-                typeId = 4;
-                break;
-            case "Certifications":
-                typeId = 3;
-                break;
-            case "Courses":
-                typeId = 2;
-                break;
-            case "Other":
-                typeId = 1;
-                break;
-            default:
-                typeId = 1;
-        }
-
+        let managerId = document.getElementById('manager');
         let xhr = new XMLHttpRequest();
 
         xhr.onreadystatechange = () => {
@@ -37,14 +20,14 @@ window.onload = () => {
                 request(data);
             }
         };
-        xhr.open("POST", `request.do?amount=${amount}&description=${description}&typeId=${typeId}&type=${type}`);
+        xhr.open("POST", `request.do?amount=${amount}&description=${description}&typeId=${typeElement.selectedIndex}&type=${type}&manager=${managerId.selectedIndex}`);
         xhr.send();
     });
 };
 
 function request(data) {
     if(data.message === "SUBMISSION SUCCESSFUL") {
-        document.getElementById("submitMessage").innerHTML = '<span class="label label-danger label-center">Submit Success!</span>';
+        document.getElementById("submitMessage").innerHTML = '<span class="label label-success label-center">Submit Success!</span>';
     }  
     else 
     {
