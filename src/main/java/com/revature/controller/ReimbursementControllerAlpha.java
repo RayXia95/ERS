@@ -78,7 +78,11 @@ public class ReimbursementControllerAlpha implements ReimbursementController
     @Override
     public Object getRequestTypes(HttpServletRequest request)
     {
-	// TODO Auto-generated method stub
+	if ( request.getMethod().equals("GET") )
+	{
+	    return "pending.html";
+	}
+
 	return null;
     }
 
