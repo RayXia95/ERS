@@ -4,6 +4,7 @@ window.onload = () => {
     }
     document.getElementById("username").innerHTML = sessionStorage.getItem("employeeUsername");
     document.getElementById("getPending").addEventListener("click", getAllPending);
+    getAllPending();
 };
 
 function getAllPending() {
@@ -14,7 +15,7 @@ function getAllPending() {
             presentCustomer(data);
         }
     };
-    xhr.open("GET", `pending.do?fetch=LIST`)
+    xhr.open("GET", `pending.do?fetch=pending`)
     xhr.send();
 }
 

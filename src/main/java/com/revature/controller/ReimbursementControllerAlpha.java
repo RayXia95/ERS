@@ -86,10 +86,16 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 	{
 	    return "pending.html";
 	}
-	else
+	else if ( request.getParameter("fetch").equals("pending") )
 	{
 	    return ReimbursementServiceImpl.getReimbursementService().getUserPendingRequests(employee);
 	}
+	else if ( request.getParameter("fetch").equals("resolved") )
+	{
+	    return ReimbursementServiceImpl.getReimbursementService().getUserFinalizedRequests(employee);
+	}
+
+	return null;
     }
 
 }
