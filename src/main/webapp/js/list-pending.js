@@ -12,14 +12,14 @@ function getAllPending() {
     xhr.onreadystatechange = () => {
         if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             let data = JSON.parse(xhr.responseText);
-            presentCustomer(data);
+            presentReimbursements(data);
         }
     };
     xhr.open("GET", `pending.do?fetch=pending`)
     xhr.send();
 }
 
-function presentCustomer(data) {
+function presentReimbursements(data) {
     if(data.message) {
         document.getElementById("listMessage").innerHTML = '<span class="label label-danger label-center">Could not get List</span>';
     }  
