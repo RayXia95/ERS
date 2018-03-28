@@ -1,10 +1,9 @@
 <!DOCTYPE <!DOCTYPE html>
 <html>
 <head>
-    <title>Request</title>
+    <title>Home</title>
 
     <link rel="icon" href="images/customer.ico "/>
-
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -41,35 +40,18 @@
         </div>
     </nav>
     <div class="col-md-4 col-md-offset-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3>Submit a reimbursement request</h3>
-            </div>
-            <div class="form-group">
-                <input id="amount" name="amount" placeholder="Amount" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input id="description" name="description" placeholder="Description" class="form-control" />
-            </div>
-            <div class="form-group">
-                <select id="type" name="type" class="form-control">
-                    <option selected>Select a type</option>
-                    <option>Other</option>
-                    <option>Courses</option>
-                    <option>Certifications</option>
-                    <option>Traveling</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <select id="manager" name="manager" class="form-control">
-                    <option selected>Select a manager</option>
-                    <option>Peter Alagna</option>
-                </select>
-            </div>
-            <div id="submitMessage"></div>
-            <button id="submit" class="btn btn-md btn-success btn-block">Submit</button>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>Resolved Requests</h3>
+                </div>
+                <ul id="resolvedList" class="list-group">
+                </ul>
+            <div id="listMessage"></div>
+                <button id="getResolved" class="btn btn-md btn-success btn-block btn-list">Get Resolved Reimbursement</button>
+                <div class="panel-footer">
+                </div>
         </div>
     </div>
-    <script src="js/request.js"></script>
+    <script src="js/list-pending.js"></script>
 </body>
 </html>
