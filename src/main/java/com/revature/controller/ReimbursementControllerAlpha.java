@@ -32,9 +32,6 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 	    return "request.html";
 	}
 
-	//int id, LocalDateTime requested, LocalDateTime resolved, double amount, String description,
-	//Employee requester, Employee approver, ReimbursementStatus status, ReimbursementType type
-	// amount param, 
 	Employee employee = (Employee) request.getSession().getAttribute("loggedEmployee");
 	Employee manager = new Employee();
 	manager.setId((int) Integer.parseInt(request.getParameter("manager")));
@@ -78,12 +75,21 @@ public class ReimbursementControllerAlpha implements ReimbursementController
     @Override
     public Object getRequestTypes(HttpServletRequest request)
     {
-	if ( request.getMethod().equals("GET") )
+	Employee employee = (Employee) request.getSession().getAttribute("loggedEmployee");
+
+	if ( employee == null )
+	{
+	    return "login.html";
+	}
+
+	if ( request.getParameter("fetch") == null )
 	{
 	    return "pending.html";
 	}
-
-	return null;
+	else
+	{
+	    return ReimbursementServiceImpl.getReimbursementService().getUserPendingRequests(employee);
+	}
     }
 
 }

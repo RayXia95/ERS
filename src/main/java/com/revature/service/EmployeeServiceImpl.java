@@ -29,11 +29,8 @@ public class EmployeeServiceImpl implements EmployeeService
 
 	if ( loggedEmployee.getPassword().equals(EmployeeDAO.getEmployeeDAO().getPasswordHash(employee)) )
 	{
-	    logger.trace("Authenicated");
 	    return loggedEmployee;
 	}
-
-	logger.trace("Not Authenicated");
 	return null;
     }
 

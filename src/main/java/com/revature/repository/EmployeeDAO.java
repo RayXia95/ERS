@@ -34,7 +34,6 @@ public class EmployeeDAO implements EmployeeRepository
     {
 	try (Connection connection = ErsRepositoryUtil.getErsRepositoryUtil().getConnection())
 	{
-	    logger.trace("Was able to get connection to insert");
 	    final String SQL = "INSERT INTO USER_T VALUES(NULL,?,?,?,?,?,?)";
 	    PreparedStatement statement = connection.prepareStatement(SQL);
 	    int parameterIndex = 0;
@@ -48,7 +47,6 @@ public class EmployeeDAO implements EmployeeRepository
 
 	    if ( statement.executeUpdate() != 0 )
 	    {
-		logger.trace("Was able to insert");
 		return true;
 	    }
 	    else
@@ -82,7 +80,6 @@ public class EmployeeDAO implements EmployeeRepository
 
 	    if ( statement.executeUpdate() != 0 )
 	    {
-		logger.trace("Was able to update employee");
 		return true;
 	    }
 	    else
