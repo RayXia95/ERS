@@ -11,6 +11,8 @@ import com.revature.model.Employee;
 import com.revature.model.Reimbursement;
 import com.revature.model.ReimbursementType;
 import com.revature.service.ReimbursementServiceImpl;
+import com.revature.util.ReimbursementStatuses;
+import com.revature.util.UserRoles;
 
 public class ReimbursementControllerAlpha implements ReimbursementController
 {
@@ -90,8 +92,30 @@ public class ReimbursementControllerAlpha implements ReimbursementController
     @Override
     public Object finalizeRequest(HttpServletRequest request)
     {
-	// TODO Auto-generated method stub
-	return null;
+	Employee employee = (Employee) request.getSession().getAttribute("loggedEmployee");
+
+	if ( employee == null )
+	{
+	    return "login.html";
+	}
+
+	Reimbursement reimbursement = new Reimbursement();
+
+	if ( employee.getEmployeeRole().getId() == UserRoles.MANAGER_ROLE )
+	{
+	    if ( ReimbursementServiceImpl.getReimbursementService().finalizeRequest(reimbursement)
+		    && reimbursement.getStatus().getStatus().equals(ReimbursementStatuses.APPROVED) )
+	    {
+		return new ClientMessage("Reimbursement has been approved");
+	    }
+	    else if ( ReimbursementServiceImpl.getReimbursementService().finalizeRequest(reimbursement)
+		    && reimbursement.getStatus().getStatus().equals(ReimbursementStatuses.DECLINED) )
+	    {
+		return new ClientMessage("Reimbursement has been declined");
+	    }
+	}
+
+	return new ClientMessage("Employee is not a manager");
     }
 
     @Override

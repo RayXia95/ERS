@@ -52,6 +52,8 @@ public class RequestHelper
     {
 	switch (request.getRequestURI())
 	{
+	    case "/ERS/resolve.do":
+		return ReimbursementControllerAlpha.getReimbursementController().finalizeRequest(request);
 	    case "/ERS/login.do":
 		return LoginControllerAlpha.getLoginController().login(request);
 	    case "/ERS/manager.do":
