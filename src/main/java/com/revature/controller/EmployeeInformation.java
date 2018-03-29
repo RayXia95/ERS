@@ -2,8 +2,23 @@ package com.revature.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.revature.model.Employee;
+import com.revature.service.EmployeeServiceImpl;
+
 public class EmployeeInformation implements EmployeeInformationController
 {
+    private static EmployeeInformation employeeInfo = new EmployeeInformation();
+
+    private EmployeeInformation()
+    {
+
+    }
+
+    public static EmployeeInformation getEmployeeInfoInstance()
+    {
+	return employeeInfo;
+    }
+
     /**
      * Registers an employee.
      * 
@@ -40,8 +55,21 @@ public class EmployeeInformation implements EmployeeInformationController
     @Override
     public Object viewEmployeeInformation(HttpServletRequest request)
     {
-	// TODO Auto-generated method stub
-	return null;
+	Employee employee = (Employee) request.getSession().getAttribute("loggedEmployee");
+
+	if ( employee == null )
+	{
+	    return "login.html";
+	}
+
+	if ( request.getParameter("fetch") == null )
+	{
+	    return "personal.html";
+	}
+	else
+	{
+	    return EmployeeServiceImpl.getEmployeeServiceImpl().getEmployeeInformation(employee);
+	}
     }
 
     /**
