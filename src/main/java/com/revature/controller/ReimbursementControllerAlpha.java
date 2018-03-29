@@ -73,7 +73,7 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 
 	if ( request.getParameter("fetch") == null )
 	{
-	    return "home.html";
+	    return "reimbursement.html";
 	}
 	else if ( request.getParameter("fetch").equals("pending") )
 	{

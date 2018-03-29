@@ -39,6 +39,32 @@
             </div>
         </div>
     </nav>
-    <script src="js/home.js"></script>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Resolved Requests</h3>
+            </div>
+            <ul id="resolvedList" class="list-group">
+            </ul>
+        <div id="resolvedMessage"></div>
+            <button id="getResolved" class="btn btn-md btn-success btn-block btn-list">Get Resolved Reimbursement</button>
+            <div class="panel-footer">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Pending Requests</h3>
+            </div>
+            <ul id="pendingList" class="list-group">
+            </ul>
+        <div id="pendingMessage"></div>
+            <button id="getPending" class="btn btn-md btn-success btn-block btn-list">Get Pending Reimbursement</button>
+            <div class="panel-footer">
+            </div>
+        </div>
+    </div>
+    <script src="js/list-reimbursement.js"></script>
 </body>
 </html>
