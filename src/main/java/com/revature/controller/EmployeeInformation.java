@@ -2,6 +2,7 @@ package com.revature.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.revature.ajax.ClientMessage;
 import com.revature.model.Employee;
 import com.revature.model.EmployeeRole;
 import com.revature.service.EmployeeServiceImpl;
@@ -66,7 +67,14 @@ public class EmployeeInformation implements EmployeeInformationController
 	updatedEmployeeInfo.setEmployeeRole(
 		new EmployeeRole(employee.getEmployeeRole().getId(), employee.getEmployeeRole().getType()));
 
-	return EmployeeServiceImpl.getEmployeeServiceImpl().updateEmployeeInformation(updatedEmployeeInfo);
+	if ( EmployeeServiceImpl.getEmployeeServiceImpl().updateEmployeeInformation(updatedEmployeeInfo) )
+	{
+	    return new ClientMessage("SUBMISSION SUCCESSFUL");
+	}
+	else
+	{
+	    return new ClientMessage("SUBMISSION UNSUCCESSFUL");
+	}
     }
 
     /**

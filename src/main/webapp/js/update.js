@@ -1,9 +1,9 @@
 window.onload = () => {
-    if(window.location.pathname !== "/ERS/update.do") {
-        window.location.replace('update.do');
-    }
+    //if(window.location.pathname !== "/ERS/update.do") {
+    //    window.location.replace('update.do');
+    //}
     document.getElementById("username").innerHTML = sessionStorage.getItem("employeeUsername");
-    document.getElementById("login").addEventListener("click", () => {
+    document.getElementById("submit").addEventListener("click", () => {
         let firstName = document.getElementById("firstName").value;
         let lastName = document.getElementById("lastName").value;
         let password = document.getElementById("password").value;
