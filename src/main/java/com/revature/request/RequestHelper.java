@@ -66,6 +66,8 @@ public class RequestHelper
 		return ReimbursementControllerAlpha.getReimbursementController().multipleRequests(request);
 	    case "/ERS/personal.do":
 		return EmployeeInformation.getEmployeeInfoInstance().viewEmployeeInformation(request);
+	    case "/ERS/update.do":
+		return EmployeeInformation.getEmployeeInfoInstance().updateEmployee(request);
 	    case "/ERS/logout.do":
 		return LoginControllerAlpha.getLoginController().logout(request);
 	    default:

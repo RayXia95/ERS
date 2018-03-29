@@ -3,6 +3,7 @@ package com.revature.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import com.revature.model.Employee;
+import com.revature.model.EmployeeRole;
 import com.revature.service.EmployeeServiceImpl;
 
 public class EmployeeInformation implements EmployeeInformationController
@@ -43,8 +44,29 @@ public class EmployeeInformation implements EmployeeInformationController
     @Override
     public Object updateEmployee(HttpServletRequest request)
     {
-	// TODO Auto-generated method stub
-	return null;
+	Employee employee = (Employee) request.getSession().getAttribute("loggedEmployee");
+
+	if ( employee == null )
+	{
+	    return "login.html";
+	}
+
+	if ( request.getMethod().equals("GET") )
+	{
+	    return "update.html";
+	}
+
+	Employee updatedEmployeeInfo = new Employee();
+	updatedEmployeeInfo.setId(employee.getId());
+	updatedEmployeeInfo.setUsername(employee.getUsername());
+	updatedEmployeeInfo.setFirstName(request.getParameter("firstName"));
+	updatedEmployeeInfo.setLastName(request.getParameter("lastName"));
+	updatedEmployeeInfo.setPassword(request.getParameter("password"));
+	updatedEmployeeInfo.setEmail(request.getParameter("email"));
+	updatedEmployeeInfo.setEmployeeRole(
+		new EmployeeRole(employee.getEmployeeRole().getId(), employee.getEmployeeRole().getType()));
+
+	return EmployeeServiceImpl.getEmployeeServiceImpl().updateEmployeeInformation(updatedEmployeeInfo);
     }
 
     /**
