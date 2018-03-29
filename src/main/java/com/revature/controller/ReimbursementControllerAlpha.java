@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 import com.revature.ajax.ClientMessage;
 import com.revature.model.Employee;
 import com.revature.model.Reimbursement;
@@ -12,6 +14,7 @@ import com.revature.service.ReimbursementServiceImpl;
 
 public class ReimbursementControllerAlpha implements ReimbursementController
 {
+    private static final Logger logger = Logger.getLogger(ReimbursementControllerAlpha.class);
     private static ReimbursementControllerAlpha reimbursementController = new ReimbursementControllerAlpha();
 
     private ReimbursementControllerAlpha()
@@ -70,7 +73,7 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 
 	if ( request.getParameter("fetch") == null )
 	{
-	    return "resolved.html";
+	    return "home.html";
 	}
 	else if ( request.getParameter("fetch").equals("pending") )
 	{
