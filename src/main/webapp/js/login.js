@@ -14,7 +14,7 @@ window.onload = () => {
                 login(data);
             }
         };
-        xhr.open("POST", `login.do?username=${username}&password=${password}`)
+        xhr.open("POST", `login.do?username=${username}&password=${password}`);
         xhr.send();
     });
 };
