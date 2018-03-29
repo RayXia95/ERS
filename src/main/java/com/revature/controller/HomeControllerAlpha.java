@@ -3,6 +3,7 @@ package com.revature.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import com.revature.model.Employee;
+import com.revature.util.UserRoles;
 
 public class HomeControllerAlpha implements HomeController
 {
@@ -27,7 +28,14 @@ public class HomeControllerAlpha implements HomeController
 	    return "login.html";
 	}
 
-	return "home.html";
+	if ( loggedEmployee.getEmployeeRole().getId() == UserRoles.EMPLOYEE_ROLE )
+	{
+	    return "home.html";
+	}
+	else
+	{
+	    return "managerHome.html";
+	}
     }
 
 }

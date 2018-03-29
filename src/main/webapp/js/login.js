@@ -27,6 +27,14 @@ function login(data) {
     {
         sessionStorage.setItem("employeeId", data.id);
         sessionStorage.setItem("employeeUsername", data.username);
-        window.location.replace("home.do");
+        if (data.employeeRole.id === 1)
+        {
+            window.location.replace("home.do");
+        }
+        else if ( data.employeeRole.id == 2)
+        {
+            window.location.replace("manager.do");
+        }
+        
     }
 };
