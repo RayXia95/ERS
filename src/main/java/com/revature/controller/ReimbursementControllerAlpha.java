@@ -73,17 +73,34 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 	    return "login.html";
 	}
 
-	if ( request.getParameter("fetch") == null )
+	if ( request.getParameter("fetch") == null && employee.getEmployeeRole().getId() == UserRoles.EMPLOYEE_ROLE )
 	{
 	    return "reimbursement.html";
 	}
-	else if ( request.getParameter("fetch").equals("pending") )
+	else if ( request.getParameter("fetch") == null
+		&& employee.getEmployeeRole().getId() == UserRoles.MANAGER_ROLE )
+	{
+	    return "managerReimbursement.html";
+	}
+	else if ( request.getParameter("fetch").equals("pending")
+		&& employee.getEmployeeRole().getId() == UserRoles.EMPLOYEE_ROLE )
 	{
 	    return ReimbursementServiceImpl.getReimbursementService().getUserPendingRequests(employee);
 	}
-	else if ( request.getParameter("fetch").equals("resolved") )
+	else if ( request.getParameter("fetch").equals("resolved")
+		&& employee.getEmployeeRole().getId() == UserRoles.EMPLOYEE_ROLE )
 	{
 	    return ReimbursementServiceImpl.getReimbursementService().getUserFinalizedRequests(employee);
+	}
+	else if ( request.getParameter("fetch").equals("pending")
+		&& employee.getEmployeeRole().getId() == UserRoles.MANAGER_ROLE )
+	{
+	    return ReimbursementServiceImpl.getReimbursementService().getAllPendingRequests();
+	}
+	else if ( request.getParameter("fetch").equals("resolved")
+		&& employee.getEmployeeRole().getId() == UserRoles.MANAGER_ROLE )
+	{
+	    return ReimbursementServiceImpl.getReimbursementService().getAllResolvedRequests();
 	}
 
 	return null;
