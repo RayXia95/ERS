@@ -27,6 +27,36 @@ window.onload = () => {
         xhr.open("GET", `resolved.do?fetch=resolved`)
         xhr.send();
     });
+
+    document.getElementById("getEmployeeReimbursements").addEventListener("click", () => {
+        let employeeElement = document.getElementById('employee');
+        let employee = employeeElement.options[employeeElement.selectedIndex].text;
+        let id;
+        // mapping from the database
+        if ( employee === "Raymond")
+        {
+            
+            id = 21;
+        }
+        else if (employee === "Peter")
+        {
+            id = 1;
+        }
+        else
+        {
+            id = 0;
+        }
+
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+            if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                let data = JSON.parse(xhr.responseText);
+                presentEmployeeReimbursements(data);
+            }
+        };
+        xhr.open("GET", `specificEmployeeReimbursements.do?fetch=specific&id=${id}`)
+        xhr.send();
+    });
 };
 
 function presentReimbursements(data) {
@@ -66,3 +96,22 @@ function presentResolvedReimbursements(data) {
         });
     }
 };
+
+function presentEmployeeReimbursements(data) {
+    if(data.message) {
+        document.getElementById("specificMessage").innerHTML = '<span class="label label-danger label-center">Could not get List</span>';
+    }  
+    else 
+    {
+        let reimbursementList = document.getElementById("reimbursementList");
+        reimbursementList.innerHTML = "";
+
+        data.forEach((reimbursement) => {
+            let reimbursementsNode = document.createElement("li");
+            reimbursementsNode.className = "list-group-item"; 
+            let reimbursementsNodeText = document.createTextNode(`Reimbursement ID: ${reimbursement.id}, Amount: ${reimbursement.amount}, Description: ${reimbursement.description}, First name: ${reimbursement.requester.firstName}, Last name: ${reimbursement.requester.lastName}, Manager ID: ${reimbursement.approver.id}, Status: ${reimbursement.status.status}, Type: ${reimbursement.type.type}`);
+            reimbursementsNode.appendChild(reimbursementsNodeText);
+            reimbursementList.appendChild(reimbursementsNode);
+        });
+    }
+}

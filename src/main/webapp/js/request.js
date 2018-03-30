@@ -1,7 +1,7 @@
 window.onload = () => {
-    if(window.location.pathname !== '/ERS/request.do') {
-        window.location.replace('request.do');
-    }
+    // if(window.location.pathname !== '/ERS/request.do') {
+    //     window.location.replace('request.do');
+    // }
     document.getElementById("username").innerHTML = sessionStorage.getItem("employeeUsername");
 
     document.getElementById("submit").addEventListener("click", () => {
