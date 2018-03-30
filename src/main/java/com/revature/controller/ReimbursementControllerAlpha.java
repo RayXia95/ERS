@@ -98,6 +98,7 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 	{
 	    return "login.html";
 	}
+
 	if ( request.getMethod() == "GET" )
 	{
 	    return "resolve.html";
