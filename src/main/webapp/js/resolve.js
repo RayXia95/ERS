@@ -3,45 +3,19 @@ window.onload = () => {
         window.location.replace('resolve.do');
     }
     document.getElementById("username").innerHTML = sessionStorage.getItem("employeeUsername");
-    getPending();
-    
+    document.getElementById("getPending").addEventListener("click", () => {
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+            if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                let data = JSON.parse(xhr.responseText);
+                presentReimbursements(data);
+            }
+        };
+        xhr.open("GET", `pending.do?fetch=pending`)
+        xhr.send();
+    });
+
 };
-
-// document.getElementById("getApprove").addEventListener("click", () => {
-//     let xhr = new XMLHttpRequest();
-//     xhr.onreadystatechange = () => {
-//         if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-//             let data = JSON.parse(xhr.responseText);
-//             presentReimbursements(data);
-//         }
-//     };
-//     xhr.open("POST", `resolve.do?resolve=approve`);
-//     xhr.send();
-// });
-// document.getElementById("getDeny").addEventListener("click", () => {
-//     let xhr = new XMLHttpRequest();
-//     xhr.onreadystatechange = () => {
-//         if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-//             let data = JSON.parse(xhr.responseText);
-//             presentReimbursements(data);
-//         }
-//     };
-//     xhr.open("POST", `resolve.do?resolve=deny`);
-//     xhr.send();
-// });
-function getPending()
-{
-    let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = () => {
-        if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-            let data = JSON.parse(xhr.responseText);
-            presentReimbursements(data);
-        }
-    };
-    xhr.open("GET", `pending.do?fetch=pending`);
-    xhr.send();
-
-}
 
 function presentReimbursements(data) {
     if(data.message) {
@@ -50,26 +24,27 @@ function presentReimbursements(data) {
     else 
     {
         let pendingList = document.getElementById("pendingList");
-        let reimbursementArray;
-
         pendingList.innerHTML = "";
+        let buttonCounter = 1;
 
         data.forEach((pending) => {
-            let pendingNode = document.createElement("li");
-            pendingNode.className = "list-group-item"; 
-            let pendingNodeText = document.createTextNode(`Reimbursement ID: ${pending.id}, Amount: ${pending.amount}, Description: ${pending.description}, First name: ${pending.requester.firstName}, Last name: ${pending.requester.lastName}, Manager ID: ${pending.approver.id}, Status: ${pending.status.status}, Type: ${pending.type.type}`);
-            reimbursementArray.push(pending);
             
+            let pendingNode = document.createElement("li");
+            let approveNode = document.createElement("button");
+
+            approveNode.id = `approve${buttonCounter}`;
+            buttonCounter++;
+            approveNode.className = "btn btn-sm btn-success btn-block btn-list";
+            pendingNode.className = "list-group-item"; 
+
+            let approveNodeText = document.createTextNode("Approve");
+            let pendingNodeText = document.createTextNode(`Reimbursement ID: ${pending.id}, Amount: ${pending.amount}, Description: ${pending.description}, First name: ${pending.requester.firstName}, Last name: ${pending.requester.lastName}, Manager ID: ${pending.approver.id}, Status: ${pending.status.status}, Type: ${pending.type.type}`);
+            
+            approveNode.appendChild(approveNodeText);
+
             pendingNode.appendChild(pendingNodeText);
             pendingList.appendChild(pendingNode);
-
-            let approveNode = document.createElement("button");
-            approveNode.id = "getApprove";
-            approveNode.className = "btn btn-sm btn-success btn-block btn-list";
-            let approveNodeText = document.createTextNode( "Approve" );
-            approveNode.appendChild(approveNodeText);
             pendingList.appendChild(approveNode);
         });
-        console.log(reimbursementArray);
     }
 };
