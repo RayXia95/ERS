@@ -2,6 +2,8 @@ package com.revature.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 import com.revature.ajax.ClientMessage;
 import com.revature.model.Employee;
 import com.revature.model.EmployeeRole;
@@ -9,6 +11,7 @@ import com.revature.service.EmployeeServiceImpl;
 
 public class EmployeeInformation implements EmployeeInformationController
 {
+    private static final Logger logger = Logger.getLogger(EmployeeInformation.class);
     private static EmployeeInformation employeeInfo = new EmployeeInformation();
 
     private EmployeeInformation()
@@ -110,7 +113,24 @@ public class EmployeeInformation implements EmployeeInformationController
     @Override
     public Object viewAllEmployees(HttpServletRequest request)
     {
-	// TODO Auto-generated method stub
+	Employee employee = (Employee) request.getSession().getAttribute("loggedEmployee");
+
+	if ( employee == null )
+	{
+	    return "login.html";
+	}
+
+	if ( request.getMethod().equals("GET") )
+	{
+	    return "viewAll.html";
+	}
+
+	logger.trace(request.getParameter("fetch"));
+
+	if ( request.getParameter("fetch") != null )
+	{
+	    return EmployeeServiceImpl.getEmployeeServiceImpl().getAllEmployeesInformation();
+	}
 	return null;
     }
 

@@ -2,6 +2,8 @@ package com.revature.request;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 import com.revature.controller.EmployeeInformation;
 import com.revature.controller.ErrorControllerAlpha;
 import com.revature.controller.HomeControllerAlpha;
@@ -21,6 +23,8 @@ import com.revature.controller.ReimbursementControllerAlpha;
  */
 public class RequestHelper
 {
+    private static final Logger logger = Logger.getLogger(RequestHelper.class);
+
     private static RequestHelper requestHelper;
 
     private RequestHelper()
@@ -74,6 +78,8 @@ public class RequestHelper
 		return EmployeeInformation.getEmployeeInfoInstance().viewEmployeeInformation(request);
 	    case "/ERS/update.do":
 		return EmployeeInformation.getEmployeeInfoInstance().updateEmployee(request);
+	    case "/ERS/viewAll.do":
+		return EmployeeInformation.getEmployeeInfoInstance().viewAllEmployees(request);
 	    case "/ERS/logout.do":
 		return LoginControllerAlpha.getLoginController().logout(request);
 	    default:
