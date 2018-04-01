@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import com.revature.ajax.ClientMessage;
 import com.revature.model.Employee;
 import com.revature.model.Reimbursement;
+import com.revature.model.ReimbursementStatus;
 import com.revature.model.ReimbursementType;
 import com.revature.service.ReimbursementServiceImpl;
 import com.revature.util.ReimbursementStatuses;
@@ -135,22 +136,27 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 	}
 
 	Reimbursement reimbursement = new Reimbursement();
+	reimbursement.setId(Integer.parseInt(request.getParameter("id")));
+	reimbursement.setStatus(new ReimbursementStatus());
+	reimbursement.getStatus().setId(ReimbursementStatuses.PENDING);
 
 	if ( employee.getEmployeeRole().getId() == UserRoles.MANAGER_ROLE )
 	{
-	    if ( ReimbursementServiceImpl.getReimbursementService().finalizeRequest(reimbursement)
-		    && reimbursement.getStatus().getStatus().equals(ReimbursementStatuses.APPROVED) )
+	    if ( request.getParameter("fetch").equals("approve") )
 	    {
-		return new ClientMessage("Reimbursement has been approved");
+		reimbursement.getStatus().setId(ReimbursementStatuses.APPROVED);
+		reimbursement.getStatus().setStatus("APPROVED");
+		ReimbursementServiceImpl.getReimbursementService().finalizeRequest(reimbursement);
 	    }
-	    else if ( ReimbursementServiceImpl.getReimbursementService().finalizeRequest(reimbursement)
-		    && reimbursement.getStatus().getStatus().equals(ReimbursementStatuses.DECLINED) )
+	    else if ( request.getParameter("fetch").equals("deny") )
 	    {
-		return new ClientMessage("Reimbursement has been declined");
+		reimbursement.getStatus().setId(ReimbursementStatuses.DECLINED);
+		reimbursement.getStatus().setStatus("DECLINED");
+		ReimbursementServiceImpl.getReimbursementService().finalizeRequest(reimbursement);
 	    }
 	}
 
-	return new ClientMessage("Employee is not a manager");
+	return null;
     }
 
     @Override
