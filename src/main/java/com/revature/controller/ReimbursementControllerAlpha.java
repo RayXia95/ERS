@@ -1,6 +1,8 @@
 package com.revature.controller;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,8 +44,8 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 	manager.setId((int) Integer.parseInt(request.getParameter("manager")));
 
 	Reimbursement reimbursement = new Reimbursement(0, LocalDateTime.now(), null,
-		(double) Double.parseDouble(request.getParameter("amount")), request.getParameter("description"),
-		employee, manager, null, new ReimbursementType((int) Integer.parseInt(request.getParameter("typeId")),
+		Double.parseDouble(request.getParameter("amount")), request.getParameter("description"), employee,
+		manager, null, new ReimbursementType((int) Integer.parseInt(request.getParameter("typeId")),
 			request.getParameter("type").toUpperCase()));
 
 	if ( ReimbursementServiceImpl.getReimbursementService().submitRequest(reimbursement) )
@@ -59,7 +61,6 @@ public class ReimbursementControllerAlpha implements ReimbursementController
     @Override
     public Object singleRequest(HttpServletRequest request)
     {
-	// TODO Auto-generated method stub
 	return null;
     }
 
@@ -101,6 +102,18 @@ public class ReimbursementControllerAlpha implements ReimbursementController
 		&& employee.getEmployeeRole().getId() == UserRoles.MANAGER_ROLE )
 	{
 	    return ReimbursementServiceImpl.getReimbursementService().getAllResolvedRequests();
+	}
+	else if ( request.getParameter("fetch").equals("specific")
+		&& employee.getEmployeeRole().getId() == UserRoles.MANAGER_ROLE )
+	{
+	    Set<Reimbursement> reimbursements = new HashSet<>();
+	    Employee targetEmployee = new Employee();
+	    targetEmployee.setId(Integer.parseInt(request.getParameter("id")));
+	    reimbursements
+		    .addAll(ReimbursementServiceImpl.getReimbursementService().getUserPendingRequests(targetEmployee));
+	    reimbursements.addAll(
+		    ReimbursementServiceImpl.getReimbursementService().getUserFinalizedRequests(targetEmployee));
+	    return reimbursements;
 	}
 
 	return null;
