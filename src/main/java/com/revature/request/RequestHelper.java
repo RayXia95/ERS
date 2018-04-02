@@ -66,6 +66,8 @@ public class RequestHelper
 		return HomeControllerAlpha.getHomeController().showEmployeeHome(request);
 	    case "/ERS/request.do":
 		return ReimbursementControllerAlpha.getReimbursementController().submitRequest(request);
+	    case "/ERS/resolved.do":
+		return ReimbursementControllerAlpha.getReimbursementController().multipleRequests(request);
 	    case "/ERS/pending.do":
 		return ReimbursementControllerAlpha.getReimbursementController().multipleRequests(request);
 	    case "/ERS/reimbursement.do":

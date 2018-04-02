@@ -3,6 +3,7 @@ window.onload = () => {
         window.location.replace('reimbursement.do');
     }
     document.getElementById("username").innerHTML = sessionStorage.getItem("employeeUsername");
+    
     document.getElementById("getPending").addEventListener("click", () => {
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
