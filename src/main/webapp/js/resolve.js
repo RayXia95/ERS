@@ -6,7 +6,6 @@ window.onload = () => {
     getReimbursement();
     
 };
-let pendingCount = 0;
 
 function getReimbursement()
 {
@@ -16,6 +15,7 @@ function getReimbursement()
                 let data = JSON.parse(xhr.responseText);
                 presentReimbursements(data);
                 setTimeout(approve(data), 2000);
+                setTimeout(deny(data), 2000);
             }
         };
     xhr.open("GET", `pending.do?fetch=pending`)
@@ -58,7 +58,6 @@ function presentReimbursements(data) {
             pendingList.appendChild(pendingNode);
             pendingList.appendChild(approveNode);
             pendingList.appendChild(denyNode);
-            pendingCount++;
         });
     }
 };
@@ -75,6 +74,24 @@ function approve(data)
                 }
             };
             xhr.open("POST", `resolve.do?fetch=approve&id=${pending.id}`)
+            xhr.send();
+        });
+        i++;
+    });
+};
+
+function deny(data)
+{   
+    let i = 0;
+    data.forEach((pending) => {
+        document.getElementById(`deny${i}`).addEventListener("click", () => {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = () => {
+                if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    let data = JSON.parse(xhr.responseText);
+                }
+            };
+            xhr.open("POST", `resolve.do?fetch=deny&id=${pending.id}`)
             xhr.send();
         });
         i++;
