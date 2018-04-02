@@ -1,0 +1,48 @@
+a {
+    cursor: pointer;
+}
+
+.navbar-default {
+    background-color: #f26925;
+}
+
+.navbar-default .navbar-brand {
+    color: white;
+}
+.navbar-default .navbar-brand:hover {
+    color: white;
+    
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: white ;
+}
+
+.btn-block {
+    width: 50%;
+    margin: auto auto 15px;
+}
+
+.form-control {
+    width: 60%;
+    margin: 10px auto 10px auto;
+    text-align: center;
+}
+
+.password-large {
+    font-size: 25px;
+}
+
+.panel-default .panel-heading {
+    text-align: center;
+}
+
+.label-center {
+    display: block;
+    width: 50%;
+    margin: auto auto 10px;
+ }
+ 
+ .btn-list {
+     margin-top: 10px;
+ }

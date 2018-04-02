@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Request</title>
+
+    <link rel="icon" href="images/customer.ico "/>
+
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+       
+    <!-- Boostrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    
+    <!-- Boostrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Our CSS -->
+    <link rel="stylesheet" href="css/our.css" />
+
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="home.do" class="navbar-brand"><strong id="username"></strong></a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>Operations</strong><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="request.do">Submit a request</a></li>
+                        <li><a href="reimbursement.do">View reimbursement</a></li>
+                        <li><a href="personal.do">View account info</a></li>
+                        <li><a href="update.do">Update account info</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="nav navbar-nav navbar-right">
+                <a href="logout.do" class="navbar-brand"><strong>Logout</strong></a>
+            </div>
+        </div>
+    </nav>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Submit a reimbursement request</h3>
+            </div>
+            <div class="form-group">
+                <input id="amount" name="amount" placeholder="Amount" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input id="description" name="description" placeholder="Description" class="form-control" />
+            </div>
+            <div class="form-group">
+                <select id="type" name="type" class="form-control">
+                    <option selected>Select a type</option>
+                    <option>Other</option>
+                    <option>Courses</option>
+                    <option>Certifications</option>
+                    <option>Traveling</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="manager" name="manager" class="form-control">
+                    <option selected>Select a manager</option>
+                    <option>Peter Alagna</option>
+                </select>
+            </div>
+            <div id="submitMessage"></div>
+            <button id="submit" class="btn btn-md btn-success btn-block">Submit</button>
+        </div>
+    </div>
+    <script src="js/request.js"></script>
+</body>
+</html>
