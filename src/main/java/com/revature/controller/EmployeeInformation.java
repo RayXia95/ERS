@@ -125,8 +125,6 @@ public class EmployeeInformation implements EmployeeInformationController
 	    return "viewAll.html";
 	}
 
-	logger.trace(request.getParameter("fetch"));
-
 	if ( request.getParameter("fetch") != null )
 	{
 	    return EmployeeServiceImpl.getEmployeeServiceImpl().getAllEmployeesInformation();
